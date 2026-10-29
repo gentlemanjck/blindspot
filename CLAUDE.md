@@ -10,7 +10,7 @@ Russian touch-typing trainer for the macOS Russian (ISO) layout. Static site, no
 - `npm run check` — typecheck + lint + format check + unit tests; **must pass before every commit**
 - `npm run test` / `npm run test:watch` — Vitest unit tests (`tests/`)
 - `npm run e2e` — Playwright e2e (`e2e/`), builds and serves `dist/` on port 4173
-- `npm run e2e:live` — the same e2e suite against https://ablindspot.netlify.app
+- `npm run e2e:live` — the same e2e suite against https://gentlemanjck.github.io/blindspot/
 - `npm run build` — production build to `dist/`
 - `npm run format` — Prettier write
 
@@ -25,7 +25,7 @@ Russian touch-typing trainer for the macOS Russian (ISO) layout. Static site, no
 
 ## Deployment
 
-Netlify builds every push to `main` of github.com/gentlemanjck/blindspot (`netlify.toml`: `npm run check && npm run build`, publish `dist`). Branches get preview URLs. Git identity for this repo is the GitHub noreply address; pushes go over SSH.
+GitHub Pages: `.github/workflows/deploy.yml` runs `npm ci`, `npm run check`, `npm run build` and deploys `dist` on every push to `main` of github.com/gentlemanjck/blindspot; live at https://gentlemanjck.github.io/blindspot/. The site lives under `/blindspot/`, so the build keeps relative paths (`base: './'`) and e2e tests use relative URLs (`goto('./#/…')`). Git identity for this repo is the GitHub noreply address; pushes go over SSH.
 
 ## Environment notes
 

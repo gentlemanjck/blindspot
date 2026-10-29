@@ -29,5 +29,3 @@ playwright-report
 blob-report
 playwright/.cache
 
-# Netlify
-.netlify

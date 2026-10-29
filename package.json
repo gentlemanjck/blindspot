@@ -15,7 +15,7 @@
     "test:watch": "vitest",
     "e2e": "playwright test",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm run test",
-    "e2e:live": "E2E_BASE_URL=https://ablindspot.netlify.app playwright test"
+    "e2e:live": "E2E_BASE_URL=https://gentlemanjck.github.io/blindspot/ playwright test"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

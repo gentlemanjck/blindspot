@@ -2,7 +2,7 @@
 
 Тренажёр слепой печати на русской раскладке macOS (ISO): курс из 19 этапов — от двух букв под указательными пальцами до цифр — и тест скорости после курса. Статический сайт без сервера и аккаунтов, прогресс хранится в браузере.
 
-Сайт: **https://ablindspot.netlify.app**
+Сайт: **https://gentlemanjck.github.io/blindspot/**
 
 Спецификация — [SPEC.md](SPEC.md).
 
@@ -27,7 +27,7 @@ npm run dev
 
 ## Публикация
 
-Сайт публикуется на Netlify: при каждом push в `main` Netlify запускает `npm run check && npm run build` и выкладывает `dist/` (настройки — в `netlify.toml`).
+Сайт публикуется на GitHub Pages: при каждом push в `main` GitHub Actions запускает `npm run check` и `npm run build` и выкладывает `dist/` (workflow — `.github/workflows/deploy.yml`). Если проверки не прошли, сайт не обновляется.
 
 ## Лицензии
 

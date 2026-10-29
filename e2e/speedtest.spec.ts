@@ -13,14 +13,14 @@ async function typeChars(page: Page, n: number): Promise<void> {
 }
 
 test('the speed test is locked until the course is complete', async ({ page }) => {
-  await page.goto('/#/test');
+  await page.goto('./#/test');
   await expect(page.getByText('Откроется, когда вы пройдёте этапы 1–17')).toBeVisible();
   await expect(page.getByTestId('text-line')).toHaveCount(0);
 });
 
 test('a 15 second test ends with a result', async ({ page }) => {
   await page.clock.install();
-  await page.goto('/?unlock=1#/test');
+  await page.goto('./?unlock=1#/test');
   await page.getByRole('button', { name: '15', exact: true }).click();
   await expect(page.getByRole('button', { name: '15', exact: true })).toHaveAttribute(
     'aria-pressed',
@@ -37,7 +37,7 @@ test('a 15 second test ends with a result', async ({ page }) => {
 });
 
 test('Tab restarts with new text, and options persist', async ({ page }) => {
-  await page.goto('/?unlock=1#/test');
+  await page.goto('./?unlock=1#/test');
   const line = page.getByTestId('text-line');
   const before = await line.getAttribute('data-text');
   await page.keyboard.press('Tab');

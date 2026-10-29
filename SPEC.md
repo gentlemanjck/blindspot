@@ -255,13 +255,13 @@ Conventions: small commits with clear messages; `npm run check` runs typecheck, 
 
 The build stays a plain static `dist/` folder so it can move to any static host.
 
-Chosen in phase 10: **Netlify**, connected to a public GitHub repository (`gentlemanjck/blindspot`). Live at **https://ablindspot.netlify.app**; `npm run e2e:live` runs the e2e suite against it. Netlify's visitor protection must stay off for production.
+Chosen in phase 10: **GitHub Pages** from the public repository `gentlemanjck/blindspot`. Live at **https://gentlemanjck.github.io/blindspot/**; `npm run e2e:live` runs the e2e suite against it. (Netlify was tried first and dropped: its free tier injects a "powered by Netlify" badge that cannot be hidden.)
 
 1. Public GitHub repository; code under MIT, data under its own licences (`LICENSE`, `src/data/README.md`).
-2. Netlify imports the repository; `netlify.toml` sets the build to `npm run check && npm run build`, publish `dist`, Node 24. Every push to `main` deploys; every other branch gets a preview URL. A failing check stops the deploy.
-3. `base` in `vite.config.ts` stays `./` (relative assets), so the same build works at the Netlify address and on a custom domain later.
+2. Pages source is **GitHub Actions**. `.github/workflows/deploy.yml` (from the Vite static-deploy guide) runs `npm ci`, `npm run check`, `npm run build` with Node from `.nvmrc`, uploads `dist` and deploys it on every push to `main`. A failing check stops the deploy.
+3. `base` in `vite.config.ts` stays `./` (relative assets), so the same build works under `/blindspot/` and on a custom domain later; e2e tests use relative URLs for the same reason.
 
-Netlify is a foreign service: availability from Russia may vary by provider. Fallbacks if users cannot open it: GitHub Pages, a Russian static host, or Yandex Object Storage, with a custom domain.
+If users cannot open github.io reliably, fallbacks are a Russian static host or Yandex Object Storage with a custom domain.
 
 Reference: [Vite — Deploying a Static Site](https://vite.dev/guide/static-deploy).
 
@@ -291,10 +291,10 @@ Acceptance criteria for the MVP:
 - [x] Latin input shows the “switch layout” banner and is not counted as errors.
 - [x] App works with localStorage disabled (no crash, warning shown).
 - [x] Playwright e2e: complete stage 1 by typing, see stage 2 unlock; run a 15 s test and see a result.
-- [x] Production build deploys and opens at the public URL. (https://ablindspot.netlify.app, e2e suite passes there)
+- [x] Production build deploys and opens at the public URL. (https://gentlemanjck.github.io/blindspot/, e2e suite passes there)
 
 Open questions:
 
 - ~~Exact positions of ё/Ё and the ISO extra keys~~ — confirmed in phase 2, see section 3.
 - ~~Which word frequency list to use~~ — hermitdave/FrequencyWords (CC BY-SA 4.0), chosen in phase 4; see `src/data/README.md`. Attribution must be shown in the app (Settings).
-- ~~Final hosting choice~~ — Netlify (phase 10). A custom domain is still optional.
+- ~~Final hosting choice~~ — GitHub Pages (phase 10). A custom domain is still optional.
