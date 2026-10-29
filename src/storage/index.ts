@@ -33,6 +33,8 @@ export interface Settings {
   passAccuracy: number;
   cpmTargets: number[];
   test: TestSettings;
+  /** Dev builds only: open the speed test without finishing the course (SPEC §5). */
+  devUnlock: boolean;
 }
 
 export interface HistoryEntry {
@@ -95,6 +97,7 @@ export function defaultData(): AppData {
         punctuation: false,
         yoOptional: true,
       },
+      devUnlock: false,
     },
     course: initialProgress(),
     keyStats: {},
@@ -204,6 +207,7 @@ function readSettings(raw: unknown, d: Settings): Settings {
       punctuation: bool(t['punctuation'], d.test.punctuation),
       yoOptional: bool(t['yoOptional'], d.test.yoOptional),
     },
+    devUnlock: bool(s['devUnlock'], d.devUnlock),
   };
 }
 

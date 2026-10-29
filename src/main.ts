@@ -1,12 +1,13 @@
 import './styles/tokens.css';
 import './styles/app.css';
 import { startRouter, type Route } from './router.ts';
-import { store } from './state.ts';
+import { applyTheme, store } from './state.ts';
 import { courseMapScreen } from './ui/courseMap.ts';
 import { h, type Screen } from './ui/dom.ts';
 import { lessonScreen } from './ui/lesson.ts';
-import { placeholderScreen } from './ui/placeholder.ts';
+import { settingsScreen } from './ui/settingsScreen.ts';
 import { speedTestScreen } from './ui/speedTest.ts';
+import { statsScreen } from './ui/statsScreen.ts';
 
 const app = document.querySelector<HTMLDivElement>('#app');
 if (!app) throw new Error('#app is missing');
@@ -37,8 +38,7 @@ const storageWarning = h('p', {
 });
 app.append(header, storageWarning, main, narrow);
 
-const theme = store.data.settings.theme;
-if (theme !== 'auto') document.documentElement.dataset['theme'] = theme;
+applyTheme(store.data.settings.theme);
 
 let current: Screen | undefined;
 
@@ -75,9 +75,9 @@ function screenFor(route: Route): Screen {
     case 'test':
       return speedTestScreen();
     case 'stats':
-      return placeholderScreen('Прогресс', 'История занятий появится здесь в следующей версии.');
+      return statsScreen();
     case 'settings':
-      return placeholderScreen('Настройки', 'Настройки появятся здесь в следующей версии.');
+      return settingsScreen();
   }
 }
 

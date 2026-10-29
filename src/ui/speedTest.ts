@@ -24,9 +24,10 @@ const TIMED_START_WORDS = 80;
 const TIMED_MORE_WORDS = 40;
 const TIMED_MARGIN_CHARS = 150;
 
-/** `?unlock=1` in the URL opens the test for development (SPEC §5). */
+/** `?unlock=1` in the URL, or the Settings toggle in dev builds, opens the test (SPEC §5). */
 function devUnlocked(): boolean {
-  return new URLSearchParams(location.search).get('unlock') === '1';
+  if (new URLSearchParams(location.search).get('unlock') === '1') return true;
+  return import.meta.env.DEV && store.data.settings.devUnlock;
 }
 
 export function speedTestScreen(): Screen {

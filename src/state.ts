@@ -1,7 +1,7 @@
 // App state shared by screens, loaded from and saved to localStorage (SPEC §8).
 
 import type { PassCriteria } from './curriculum/ru.ts';
-import { load, save, type AppData, type StorageLike } from './storage/index.ts';
+import { load, save, type AppData, type StorageLike, type Theme } from './storage/index.ts';
 
 /** localStorage, or null when the browser blocks it (even reading the property can throw). */
 function browserStorage(): StorageLike | null {
@@ -36,4 +36,10 @@ export function criteria(): PassCriteria {
 export function commit(next: AppData): void {
   store.data = next;
   if (store.canSave) store.canSave = save(storage, next);
+}
+
+/** Sets the colour theme on the root element; 'auto' follows the system. */
+export function applyTheme(theme: Theme): void {
+  if (theme === 'auto') delete document.documentElement.dataset['theme'];
+  else document.documentElement.dataset['theme'] = theme;
 }
