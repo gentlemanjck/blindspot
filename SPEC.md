@@ -104,7 +104,7 @@ Each stage contains **4 exercise types**, in order. Each exercise is about 1 lin
 3. **Words** — real words built only from unlocked letters, taken from a frequency word list, preferring words that contain the new letters.
 4. **Phrases** — short sequences of those words; from stage 16 on, real sentences with capitals, and punctuation added only as it is unlocked (stage 16: capitals, no punctuation; stage 17: plus period and comma; stage 18: plus the rest).
 
-If an early stage has too few real words (stages 1–3), skip type 3 and 4 or use pseudo-words; never show a word that contains a locked letter.
+If an early stage has too few real words, skip type 3 and 4 or use pseudo-words; never show a word that contains a locked letter. (With the current word list, stages 1–2 have only Keys and Combinations; a stage needs at least 12 multi-letter words.)
 
 **Unlock rule:** any character — letter, capital, punctuation mark or digit — appears in lesson text only after the stage that introduces it is fully completed, or within that stage itself. This applies to every exercise type.
 
@@ -176,7 +176,7 @@ All interface text is in Russian. Desktop-first (min width 1024 px); on narrow s
 | Speed test | `#/test` | Mode bar (time/words, options), text, live stats; keyboard hidden by default. |
 | Test result | overlay on test | Figures from section 5, personal record badge, Restart. |
 | Progress | `#/stats` | History table (date, mode, CPM, accuracy), per-key accuracy table. |
-| Settings | `#/settings` | Pass criteria, show/hide keyboard, theme, reset progress (with confirm). |
+| Settings | `#/settings` | Pass criteria, show/hide keyboard, theme, reset progress (with confirm), data sources and licences (word list attribution, CC BY-SA 4.0). |
 
 Typing area behaviour:
 
@@ -295,5 +295,5 @@ Acceptance criteria for the MVP:
 Open questions:
 
 - ~~Exact positions of ё/Ё and the ISO extra keys~~ — confirmed in phase 2, see section 3.
-- Which word frequency list to use, given its licence.
+- ~~Which word frequency list to use~~ — hermitdave/FrequencyWords (CC BY-SA 4.0), chosen in phase 4; see `src/data/README.md`. Attribution must be shown in the app (Settings).
 - Final hosting choice and whether to buy a domain.
