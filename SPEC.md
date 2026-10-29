@@ -94,7 +94,7 @@ Starting curriculum (store it as data in `src/curriculum/ru.ts` so it is easy to
 | 15 | Я Ё | Left pinky bottom row; right pinky home row, left of Enter |
 | 16 | Shift + capitals | Opposite-hand Shift |
 | 17 | Period, comma (Shift+7, Shift+6) | Sentence punctuation |
-| 18 | ! ? : ; - «» | Remaining punctuation |
+| 18 | ! ? : ; - " | Remaining punctuation (straight quotes `"` on Shift+2 instead of «», which need Option) |
 | 19 | Digits 0–9 | Optional final stage |
 
 Each stage contains **4 exercise types**, in order. Each exercise is about 1 line (40–60 characters):
@@ -236,7 +236,7 @@ e2e/                   // Playwright tests
 Text data:
 
 - A Russian word frequency list with a licence that allows redistribution; record the source and licence in `src/data/README.md`. Check the licence before adding.
-- Sentences for later stages and the test: passages from authors whose works are in the public domain (e.g. Pushkin, Chekhov, Tolstoy), normalised to the allowed character set. Record each source.
+- Sentences for later stages and the test: passages from authors whose works are in the public domain (e.g. Pushkin, Chekhov, Tolstoy), normalised to the allowed character set (e.g. «» and „“ → `"`, — and – → `-`). Record each source.
 
 Claude Code skills to use:
 
