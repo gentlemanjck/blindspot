@@ -2,6 +2,7 @@
 
 import type { PassCriteria } from '../curriculum/ru.ts';
 import type { KeyStat } from '../engine/index.ts';
+import { locate } from '../layouts/ru-mac-iso.ts';
 import type { AppData, HistoryEntry } from '../storage/index.ts';
 
 const RECENT = 20;
@@ -67,6 +68,44 @@ export function keyAccuracy(stats: Record<string, KeyStat>, minPresses: number):
       meanMs: s.timedHits ? s.totalMs / s.timedHits : null,
     }))
     .sort((a, b) => a.accuracy - b.accuracy || (b.meanMs ?? 0) - (a.meanMs ?? 0));
+}
+
+export interface KeyHeat {
+  /** Physical key (KeyboardEvent.code). */
+  code: string;
+  hits: number;
+  misses: number;
+  /** 0–100. */
+  accuracy: number;
+  meanMs: number | null;
+}
+
+/**
+ * Per-key stats summed by physical key for the keyboard heatmap: "а" and "А" are one key.
+ * Keys pressed fewer than `minPresses` times are left out.
+ */
+export function keyHeat(stats: Record<string, KeyStat>, minPresses: number): KeyHeat[] {
+  const byCode = new Map<string, KeyStat>();
+  for (const [char, s] of Object.entries(stats)) {
+    const code = locate(char)?.key.code;
+    if (!code) continue;
+    const sum = byCode.get(code) ?? { hits: 0, misses: 0, totalMs: 0, timedHits: 0 };
+    byCode.set(code, {
+      hits: sum.hits + s.hits,
+      misses: sum.misses + s.misses,
+      totalMs: sum.totalMs + s.totalMs,
+      timedHits: sum.timedHits + s.timedHits,
+    });
+  }
+  return [...byCode]
+    .filter(([, s]) => s.hits + s.misses >= minPresses)
+    .map(([code, s]) => ({
+      code,
+      hits: s.hits,
+      misses: s.misses,
+      accuracy: (s.hits / (s.hits + s.misses)) * 100,
+      meanMs: s.timedHits ? s.totalMs / s.timedHits : null,
+    }));
 }
 
 const BANDS = ['1–5', '6–10', '11–15', '16–19'];

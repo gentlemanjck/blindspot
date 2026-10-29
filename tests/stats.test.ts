@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { historyLabel, keyAccuracy, parseCriteria, summary } from '../src/stats/index.ts';
+import { historyLabel, keyAccuracy, keyHeat, parseCriteria, summary } from '../src/stats/index.ts';
 import { defaultData, type HistoryEntry } from '../src/storage/index.ts';
 
 const at = '2026-10-29T12:00:00.000Z';
@@ -71,6 +71,24 @@ describe('keyAccuracy', () => {
     );
     expect(rows.map((r) => r.char)).toEqual(['б', 'г', 'а']);
     expect(rows[0]).toEqual({ char: 'б', hits: 18, misses: 2, accuracy: 90, meanMs: 400 });
+  });
+});
+
+describe('keyHeat', () => {
+  it('sums lower and upper case into one physical key and drops rare keys', () => {
+    const rows = keyHeat(
+      {
+        а: { hits: 8, misses: 1, totalMs: 1600, timedHits: 8 },
+        А: { hits: 1, misses: 0, totalMs: 400, timedHits: 1 },
+        ' ': { hits: 30, misses: 0, totalMs: 3000, timedHits: 30 },
+        о: { hits: 5, misses: 0, totalMs: 500, timedHits: 5 },
+      },
+      10,
+    );
+    expect(rows).toEqual([
+      { code: 'KeyF', hits: 9, misses: 1, accuracy: 90, meanMs: 2000 / 9 },
+      { code: 'Space', hits: 30, misses: 0, accuracy: 100, meanMs: 100 },
+    ]);
   });
 });
 

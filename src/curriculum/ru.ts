@@ -4,6 +4,9 @@ export type ExerciseType = 'keys' | 'combos' | 'words' | 'phrases';
 
 export const EXERCISE_TYPES: readonly ExerciseType[] = ['keys', 'combos', 'words', 'phrases'];
 
+/** Each exercise type is done this many times in a row, each time with fresh text. */
+export const EXERCISE_REPEATS = 2;
+
 /** What a stage teaches; decides how the text generators use the new characters. */
 export type StageKind = 'letters' | 'capitals' | 'punctuation' | 'digits';
 

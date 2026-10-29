@@ -8,16 +8,18 @@ test('completing stage 1 by typing unlocks stage 2', async ({ page }) => {
   await page.getByRole('link', { name: 'Начать с этапа 1' }).click();
   await expect(page).toHaveURL(/#\/lesson\/1\/1$/);
 
-  await typeExercise(page);
-  await expect(page.getByRole('dialog')).toContainText('зн/мин');
-  await page.getByRole('button', { name: 'Дальше' }).click();
-  await expect(page).toHaveURL(/#\/lesson\/1\/2$/);
+  // Stage 1 has keys and combinations, each twice; "Next" after the fourth leads to stage 2.
+  for (let i = 2; i <= 4; i++) {
+    await typeExercise(page);
+    await expect(page.getByRole('dialog')).toContainText('зн/мин');
+    await page.getByRole('button', { name: 'Дальше' }).click();
+    await expect(page).toHaveURL(new RegExp(`#/lesson/1/${i}$`));
+  }
 
   await typeExercise(page);
   await expect(page.getByRole('dialog')).toContainText('зн/мин');
   await page.getByRole('button', { name: 'Дальше' }).click();
 
-  // Stage 1 has two exercises, so "Next" leads to stage 2.
   await expect(page).toHaveURL(/#\/lesson\/2\/1$/);
   await page.getByRole('link', { name: 'Курс' }).click();
   await expect(page.locator('[data-stage="1"]')).toHaveClass(/done/);

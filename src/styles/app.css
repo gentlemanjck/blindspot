@@ -593,6 +593,28 @@ a.stage-link:hover .stage-title {
   border: 5px solid var(--red);
 }
 
+/* Heatmap on the progress screen: keys fill from grey to red by --heat, finger hatching is off. */
+.keyboard.heatmap .key {
+  --tone: transparent;
+  color: var(--todo);
+}
+
+.keyboard.heatmap .key:not(.heat)::before {
+  border-color: color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.keyboard.heatmap .key.heat {
+  color: var(--ink);
+}
+
+.keyboard.heatmap .key.heat::before {
+  background: color-mix(in srgb, var(--red) calc(var(--heat) * 100%), var(--paper-2));
+}
+
+.keyboard.heatmap .key.hot {
+  color: var(--on-red);
+}
+
 /* ---------- Result ---------- */
 
 .result {
@@ -795,6 +817,11 @@ a.stage-link:hover .stage-title {
   cursor: pointer;
 }
 
+.seg-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
 .seg-btn + .seg-btn {
   border-left-width: 0;
 }
@@ -873,6 +900,33 @@ a.stage-link:hover .stage-title {
 
 .summary .figure-value {
   font-size: 56px;
+}
+
+.heatmap-block {
+  margin-bottom: calc(var(--u) * 6);
+}
+
+.heatmap-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: calc(var(--u) * 3);
+}
+
+.heat-legend {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 1.5);
+  margin: calc(var(--u) * 2) 0 var(--u);
+  font-size: var(--text-small);
+  color: var(--muted);
+}
+
+.heat-scale {
+  width: 160px;
+  height: calc(var(--u) * 1.5);
+  border: 1.5px solid var(--rule);
+  background: linear-gradient(90deg, var(--paper-2), var(--red));
 }
 
 .stats-grid {

@@ -26,7 +26,7 @@ The visual design concept was chosen in phase 5 (see section 7, "Visual design")
 | Speed test, unlocked after the course | Yes | Custom user text, quotes mode |
 | On-screen keyboard with finger zones and next-key hint | Yes | Hand diagram |
 | Live stats (CPM, accuracy, timer) and result screen | Yes | Speed-over-time graph per attempt |
-| Progress page | History table + per-key accuracy | Keyboard heatmap, trend charts |
+| Progress page | History table, per-key accuracy, keyboard heatmap | Trend charts |
 | Progress saved in localStorage | Yes | Export/import JSON |
 | Light and dark theme | Neutral theme via CSS variables | Full design from the design step |
 | Sound on keypress | No | Optional toggle |
@@ -97,14 +97,14 @@ Starting curriculum (store it as data in `src/curriculum/ru.ts` so it is easy to
 | 18 | ! ? : ; - " | Remaining punctuation (straight quotes `"` on Shift+2 instead of «», which need Option) |
 | 19 | Digits 0–9 | Optional final stage |
 
-Each stage contains **4 exercise types**, in order. Each exercise is about 1 line (40–60 characters):
+Each stage contains **4 exercise types**, in order, and **each type is done twice in a row** with fresh text, so a full stage is 8 exercises (`EXERCISE_REPEATS` in `src/curriculum/ru.ts`). Each exercise is about 1 line (40–60 characters):
 
 1. **Keys** — the new keys alone and in pairs: `аоа оао аа оо`.
 2. **Combinations** — syllables mixing new and learned keys, new keys weighted \~50%.
 3. **Words** — real words built only from unlocked letters, taken from a frequency word list, preferring words that contain the new letters.
 4. **Phrases** — short sequences of those words; from stage 16 on, real sentences with capitals, and punctuation added only as it is unlocked (stage 16: capitals, no punctuation; stage 17: plus period and comma; stage 18: plus the rest).
 
-If an early stage has too few real words, skip type 3 and 4 or use pseudo-words; never show a word that contains a locked letter. (With the current word list, stages 1–2 have only Keys and Combinations; a stage needs at least 12 multi-letter words.)
+If an early stage has too few real words, skip type 3 and 4 or use pseudo-words; never show a word that contains a locked letter. (With the current word list, stages 1–2 have only Keys and Combinations, so 4 exercises; a stage needs at least 12 multi-letter words.)
 
 **Unlock rule:** any character — letter, capital, punctuation mark or digit — appears in lesson text only after the stage that introduces it is fully completed, or within that stage itself. This applies to every exercise type.
 
@@ -171,12 +171,14 @@ All interface text is in Russian. Desktop-first (min width 1024 px); on narrow s
 | Screen | Route | Contents |
 | --- | --- | --- |
 | Home / course map | `#/` | List of stages with status (locked, current, done), best CPM and accuracy per stage, “Continue” button, speed test entry (locked or open). |
-| Lesson | `#/lesson/:stage/:exercise` | Text line, live stats, on-screen keyboard, stage progress (exercise 2 of 4). |
+| Lesson | `#/lesson/:stage/:exercise` | Text line, live stats, on-screen keyboard, stage progress (“exercise 4 of 8: combinations, again”). |
 | Lesson result | overlay on lesson | CPM, accuracy, pass/fail vs criteria, problem keys, buttons: Retry / Next. |
 | Speed test | `#/test` | Mode bar (time/words, options), text, live stats; keyboard hidden by default. |
 | Test result | overlay on test | Figures from section 5, personal record badge, Restart. |
-| Progress | `#/stats` | History table (date, mode, CPM, accuracy), per-key accuracy table. |
+| Progress | `#/stats` | Keyboard heatmap, history table (date, mode, CPM, accuracy), per-key accuracy table. |
 | Settings | `#/settings` | Pass criteria, show/hide keyboard, theme, reset progress (with confirm), data sources and licences (word list attribution, CC BY-SA 4.0). |
+
+Keyboard heatmap (Progress): the lesson keyboard with each physical key filled from grey to red; lower and upper case count as one key, keys pressed fewer than 10 times stay blank. A switch shows either accuracy (100 % = grey, 85 % and lower = full red) or mean time per key (scaled from the user's fastest to slowest key). A tooltip on each key gives accuracy, presses and mean time; a legend explains the scale. The per-key table below keeps the same data for screen readers.
 
 Typing area behaviour:
 
@@ -195,7 +197,7 @@ All data is stored in `localStorage` under one key, `typing-trainer:v1`, as a si
 
 ```
 {
-  schemaVersion: 1,
+  schemaVersion: 2,
   settings: { showKeyboard, theme, passAccuracy, cpmTargets, test: { lengthType, length, source, capitals, punctuation, yoOptional } },
   course: { stages: { [stageId]: { status, exercisesPassed[], bestCpm, bestAccuracy } }, completedAt? },
   keyStats: { [char]: { hits, misses, totalMs, timedHits } },  // mean time = totalMs / timedHits (the first keystroke of a session has no timing)
@@ -209,6 +211,7 @@ Rules:
 - Wrap every read/write in try/catch; if storage is unavailable or corrupt, the app still works and shows a small warning that progress will not be saved.
 - Write after each finished exercise or test, never on every keystroke.
 - `schemaVersion` plus a `migrate()` function from day one, so later changes do not wipe progress.
+- v1 → v2 (each exercise type doubled): a passed v1 exercise `i` becomes `2i`, the first of its pair; a done stage gets every exercise marked passed.
 - Settings has “Reset progress” with a confirmation dialog.
 
 ## 9. Tech stack, structure, tooling

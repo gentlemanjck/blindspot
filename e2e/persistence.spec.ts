@@ -8,7 +8,7 @@ test('progress survives a page reload', async ({ page }) => {
 
   await page.goto('./');
   await page.reload();
-  await expect(page.locator('[data-stage="1"]')).toContainText('1 из 2');
+  await expect(page.locator('[data-stage="1"]')).toContainText('1 из 4');
   await expect(page.getByRole('link', { name: 'Продолжить этап 1' })).toHaveAttribute(
     'href',
     '#/lesson/1/2',

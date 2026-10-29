@@ -12,6 +12,15 @@ test('a finished exercise shows up in the progress history', async ({ page }) =>
   await page.goto('./#/stats');
   await expect(page.getByRole('table').first()).toContainText('Урок 1, клавиши');
   await expect(page.getByRole('button', { name: 'Показать ещё' })).toBeHidden();
+
+  // Keyboard heatmap: typed keys are filled, the switch moves to speed.
+  await expect(page.locator('.keyboard.heatmap .key.heat').first()).toBeVisible();
+  await page.getByRole('button', { name: 'Скорость' }).click();
+  await expect(page.getByRole('button', { name: 'Скорость' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  await expect(page.getByText(/медленнее, \d+ мс/)).toBeVisible();
 });
 
 test('a stricter accuracy criterion fails an exercise with one mistake', async ({ page }) => {
@@ -59,14 +68,14 @@ test('resetting progress asks first and returns the course to stage 1', async ({
   await page.getByRole('button', { name: 'Сбросить прогресс' }).click();
   await page.getByRole('button', { name: 'Отмена' }).click();
   await page.goto('./');
-  await expect(page.locator('[data-stage="1"]')).toContainText('1 из 2');
+  await expect(page.locator('[data-stage="1"]')).toContainText('1 из 4');
 
   await page.goto('./#/settings');
   await page.getByRole('button', { name: 'Сбросить прогресс' }).click();
   await page.getByRole('button', { name: 'Сбросить', exact: true }).click();
   await expect(page.getByText('Прогресс сброшен.')).toBeVisible();
   await page.goto('./');
-  await expect(page.locator('[data-stage="1"]')).toContainText('0 из 2');
+  await expect(page.locator('[data-stage="1"]')).toContainText('0 из 4');
   await page.goto('./#/stats');
   await expect(page.getByText('после первого упражнения')).toBeVisible();
 });

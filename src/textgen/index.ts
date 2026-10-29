@@ -1,6 +1,7 @@
 // Seeded lesson text generators (SPEC §4). Every line uses only characters unlocked by the stage.
 
 import {
+  EXERCISE_REPEATS,
   EXERCISE_TYPES,
   getStage,
   unlockedLetters,
@@ -35,9 +36,11 @@ function wordPool(stageId: number): string[] {
   return pool;
 }
 
+/** The exercises of a stage in order, each type repeated EXERCISE_REPEATS times. */
 export function exerciseTypes(stageId: number): ExerciseType[] {
   const enough = wordPool(stageId).filter((w) => w.length > 1).length >= MIN_WORDS;
-  return enough ? [...EXERCISE_TYPES] : ['keys', 'combos'];
+  const types: readonly ExerciseType[] = enough ? EXERCISE_TYPES : ['keys', 'combos'];
+  return types.flatMap((t) => Array<ExerciseType>(EXERCISE_REPEATS).fill(t));
 }
 
 export function generate(stageId: number, type: ExerciseType, seed: number): string {

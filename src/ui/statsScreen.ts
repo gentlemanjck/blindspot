@@ -1,11 +1,18 @@
-// Progress screen: summary, history table and per-key accuracy (SPEC §7).
+// Progress screen: summary, keyboard heatmap, history table and per-key accuracy (SPEC §7).
 
+import { keyByCode } from '../layouts/ru-mac-iso.ts';
 import { store } from '../state.ts';
-import { historyLabel, keyAccuracy, summary } from '../stats/index.ts';
+import { historyLabel, keyAccuracy, keyHeat, summary, type KeyHeat } from '../stats/index.ts';
 import { charName, h, type Screen } from './dom.ts';
+import { Keyboard } from './keyboard.ts';
 
 const PAGE = 50;
 const MIN_KEY_PRESSES = 10;
+
+/** Accuracy at or below this is full red on the heatmap. */
+const HEAT_FLOOR_ACCURACY = 85;
+
+type HeatMetric = 'accuracy' | 'speed';
 
 const dateFormat = new Intl.DateTimeFormat('ru', {
   day: 'numeric',
@@ -70,6 +77,7 @@ export function statsScreen(): Screen {
   showMore();
 
   const keys = keyAccuracy(data.keyStats, MIN_KEY_PRESSES);
+  const heatmap = keys.length ? heatmapSection(keyHeat(data.keyStats, MIN_KEY_PRESSES)) : null;
 
   return {
     el: h(
@@ -91,6 +99,7 @@ export function statsScreen(): Screen {
           'точность за 20 занятий',
         ),
       ),
+      heatmap,
       h(
         'div',
         { class: 'stats-grid' },
@@ -163,4 +172,91 @@ export function statsScreen(): Screen {
       ),
     ),
   };
+}
+
+/** Keyboard coloured by accuracy or by speed, with a switch and a legend. */
+function heatmapSection(rows: KeyHeat[]): HTMLElement {
+  const keyboard = new Keyboard();
+  const legendLow = h('span');
+  const legendHigh = h('span');
+  const buttons = new Map<HeatMetric, HTMLElement>();
+
+  const timed = rows.flatMap((r) => (r.meanMs === null ? [] : [r.meanMs]));
+  const fastest = Math.min(...timed);
+  const slowest = Math.max(...timed);
+
+  function level(r: KeyHeat, metric: HeatMetric): number | null {
+    if (metric === 'accuracy') {
+      return Math.min(1, Math.max(0, (100 - r.accuracy) / (100 - HEAT_FLOOR_ACCURACY)));
+    }
+    if (r.meanMs === null) return null;
+    return slowest > fastest ? (r.meanMs - fastest) / (slowest - fastest) : 0;
+  }
+
+  function show(metric: HeatMetric): void {
+    const levels = new Map<string, { level: number; title: string }>();
+    for (const r of rows) {
+      const l = level(r, metric);
+      if (l === null) continue;
+      const name = charName(keyByCode(r.code)?.normal ?? r.code);
+      const time = r.meanMs === null ? '' : `, в среднем ${Math.round(r.meanMs)} мс`;
+      levels.set(r.code, {
+        level: l,
+        title: `${name}: точность ${Math.floor(r.accuracy)} %, нажатий: ${r.hits + r.misses}${time}`,
+      });
+    }
+    keyboard.heat(levels);
+    for (const [m, b] of buttons) b.setAttribute('aria-pressed', String(m === metric));
+    if (metric === 'accuracy') {
+      legendLow.textContent = 'без ошибок';
+      legendHigh.textContent = `${HEAT_FLOOR_ACCURACY} % и ниже`;
+    } else {
+      legendLow.textContent = `быстрее, ${Math.round(fastest)} мс`;
+      legendHigh.textContent = `медленнее, ${Math.round(slowest)} мс`;
+    }
+  }
+
+  const options: { value: HeatMetric; text: string }[] = [
+    { value: 'accuracy', text: 'Точность' },
+    { value: 'speed', text: 'Скорость' },
+  ];
+  const segment = h(
+    'div',
+    { class: 'segment', attrs: { role: 'group', 'aria-label': 'Что показать на карте' } },
+    ...options.map((o) => {
+      const b = h('button', {
+        class: 'seg-btn',
+        text: o.text,
+        attrs: { type: 'button', 'aria-pressed': 'false' },
+        on: { click: () => show(o.value) },
+      });
+      buttons.set(o.value, b);
+      return b;
+    }),
+  );
+  if (!timed.length) buttons.get('speed')?.setAttribute('disabled', '');
+
+  show('accuracy');
+  return h(
+    'section',
+    { class: 'heatmap-block' },
+    h(
+      'div',
+      { class: 'heatmap-head' },
+      h('h2', { class: 'subtitle', text: 'Карта клавиатуры' }),
+      segment,
+    ),
+    keyboard.el,
+    h(
+      'p',
+      { class: 'heat-legend' },
+      legendLow,
+      h('span', { class: 'heat-scale', attrs: { 'aria-hidden': 'true' } }),
+      legendHigh,
+    ),
+    h('p', {
+      class: 'hint',
+      text: `Наведите на клавишу, чтобы увидеть цифры. Пустые клавиши нажаты меньше ${MIN_KEY_PRESSES} раз.`,
+    }),
+  );
 }

@@ -7,12 +7,18 @@ import {
   type StageProgress,
   type StageStatus,
 } from '../curriculum/progress.ts';
-import { DEFAULT_CRITERIA, EXERCISE_TYPES, STAGES, type ExerciseType } from '../curriculum/ru.ts';
+import {
+  DEFAULT_CRITERIA,
+  EXERCISE_REPEATS,
+  EXERCISE_TYPES,
+  STAGES,
+  type ExerciseType,
+} from '../curriculum/ru.ts';
 import type { KeyStat } from '../engine/index.ts';
 import { exerciseTypes } from '../textgen/index.ts';
 
 export const STORAGE_KEY = 'typing-trainer:v1';
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 export const HISTORY_LIMIT = 500;
 
 export type Theme = 'auto' | 'light' | 'dark';
@@ -164,6 +170,7 @@ export function resetProgress(data: AppData): AppData {
  * `n → n + 1` here; unknown or newer versions start fresh rather than misreading data.
  */
 export function migrate(raw: unknown): AppData {
+  if (isObject(raw) && raw['schemaVersion'] === 1) raw = fromV1(raw);
   if (!isObject(raw) || raw['schemaVersion'] !== SCHEMA_VERSION) return defaultData();
   const d = defaultData();
   return {
@@ -177,6 +184,27 @@ export function migrate(raw: unknown): AppData {
 }
 
 type Obj = Record<string, unknown>;
+
+/**
+ * v1 → v2: each exercise type is now done EXERCISE_REPEATS times. A passed v1 exercise counts
+ * as the first of its group; a finished stage keeps every exercise passed.
+ */
+function fromV1(raw: Obj): Obj {
+  const stages = obj(obj(raw['course'])['stages']);
+  const next: Obj = {};
+  for (const [id, value] of Object.entries(stages)) {
+    const s = obj(value);
+    const passed = Array.isArray(s['exercisesPassed']) ? (s['exercisesPassed'] as unknown[]) : [];
+    next[id] = {
+      ...s,
+      exercisesPassed:
+        s['status'] === 'done'
+          ? exerciseTypes(Number(id)).map((_, i) => i)
+          : passed.map((i) => (typeof i === 'number' ? i * EXERCISE_REPEATS : i)),
+    };
+  }
+  return { ...raw, schemaVersion: 2, course: { ...obj(raw['course']), stages: next } };
+}
 
 const isObject = (v: unknown): v is Obj => typeof v === 'object' && v !== null && !Array.isArray(v);
 const num = (v: unknown, def: number): number =>

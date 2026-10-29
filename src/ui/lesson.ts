@@ -67,7 +67,7 @@ function mountLesson(
       }),
       h('p', {
         class: 'lesson-sub',
-        text: `Упражнение ${exercise + 1} из ${types.length}: ${EXERCISE_NAMES[type]}`,
+        text: `Упражнение ${exercise + 1} из ${types.length}: ${EXERCISE_NAMES[type]}${types[exercise - 1] === type ? ', ещё раз' : ''}`,
       }),
     ),
     h('div', { class: 'type-zone' }, textLine.el, wedge),

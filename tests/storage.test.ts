@@ -9,6 +9,7 @@ import {
   migrate,
   resetProgress,
   save,
+  SCHEMA_VERSION,
   STORAGE_KEY,
   type HistoryEntry,
   type StorageLike,
@@ -64,7 +65,7 @@ describe('load and save', () => {
     data.course = recordResult(data.course, 1, 0, { cpm: 120, accuracy: 96, passed: true }, AT);
     expect(save(storage, data)).toBe(true);
     expect(load(storage).data).toEqual(data);
-    expect(JSON.parse(storage.getItem(STORAGE_KEY) ?? '{}').schemaVersion).toBe(1);
+    expect(JSON.parse(storage.getItem(STORAGE_KEY) ?? '{}').schemaVersion).toBe(SCHEMA_VERSION);
   });
 
   it('recovers from corrupt JSON with defaults', () => {
@@ -130,8 +131,23 @@ describe('migrate', () => {
     expect(data.course.stages[19]?.status).toBe('locked');
   });
 
+  it('keeps v1 progress when every exercise type became two exercises', () => {
+    const data = migrate({
+      schemaVersion: 1,
+      course: {
+        stages: {
+          1: { status: 'done', exercisesPassed: [0, 1], bestCpm: 80, bestAccuracy: 97 },
+          2: { status: 'current', exercisesPassed: [0, 1], bestCpm: 70, bestAccuracy: 96 },
+        },
+      },
+    });
+    expect(data.schemaVersion).toBe(2);
+    expect(data.course.stages[1]).toMatchObject({ status: 'done', exercisesPassed: [0, 1, 2, 3] });
+    expect(data.course.stages[2]).toMatchObject({ status: 'current', exercisesPassed: [0, 2] });
+  });
+
   it('starts fresh for unknown or future schema versions', () => {
-    expect(migrate({ schemaVersion: 2, settings: { showKeyboard: false } })).toEqual(defaultData());
+    expect(migrate({ schemaVersion: 3, settings: { showKeyboard: false } })).toEqual(defaultData());
     expect(migrate('nonsense')).toEqual(defaultData());
   });
 });

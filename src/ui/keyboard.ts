@@ -96,6 +96,28 @@ export class Keyboard {
     }, 160);
   }
 
+  /**
+   * Heatmap mode: fills each listed key by `level` in [0, 1] and puts the details in its tooltip.
+   * Keys that are not listed stay blank. Calling it again replaces the previous map.
+   */
+  heat(keys: Map<string, { level: number; title: string }>): void {
+    this.el.classList.add('heatmap');
+    for (const [code, els] of this.byCode) {
+      const value = keys.get(code);
+      for (const el of els) {
+        el.classList.toggle('heat', !!value);
+        el.classList.toggle('hot', !!value && value.level > 0.55);
+        if (value) {
+          el.style.setProperty('--heat', value.level.toFixed(3));
+          el.title = value.title;
+        } else {
+          el.style.removeProperty('--heat');
+          el.removeAttribute('title');
+        }
+      }
+    }
+  }
+
   private renderKey(slot: Slot): HTMLElement {
     const el = h('div', { class: `key${slot.class ? ` ${slot.class}` : ''}` });
     el.style.setProperty('--w', String(slot.w));

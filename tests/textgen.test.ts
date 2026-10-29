@@ -22,16 +22,20 @@ describe('createRng', () => {
 
 describe('exerciseTypes', () => {
   it('skips words and phrases while there are too few real words', () => {
-    expect(exerciseTypes(1)).toEqual(['keys', 'combos']);
-    expect(exerciseTypes(2)).toEqual(['keys', 'combos']);
+    expect(exerciseTypes(1)).toEqual(['keys', 'keys', 'combos', 'combos']);
+    expect(exerciseTypes(2)).toEqual(['keys', 'keys', 'combos', 'combos']);
   });
 
-  it('has all four types once enough words are unlocked', () => {
+  it('has all four types, each twice, once enough words are unlocked', () => {
     for (const stage of STAGES.filter((s) => s.id >= 3)) {
       expect(exerciseTypes(stage.id), `stage ${stage.id}`).toEqual([
         'keys',
+        'keys',
+        'combos',
         'combos',
         'words',
+        'words',
+        'phrases',
         'phrases',
       ]);
     }
@@ -42,7 +46,7 @@ describe('generate', () => {
   it('never uses a locked character, keeps 40–60 chars and clean spacing', () => {
     for (const stage of STAGES) {
       const allowed = allowedChars(stage.id);
-      for (const type of exerciseTypes(stage.id)) {
+      for (const type of new Set(exerciseTypes(stage.id))) {
         for (const seed of SEEDS) {
           const line = generate(stage.id, type, seed);
           const where = `stage ${stage.id} ${type} seed ${seed}: "${line}"`;

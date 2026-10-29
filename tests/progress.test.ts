@@ -86,11 +86,13 @@ describe('progress', () => {
   it('unlocks the next stage only when every exercise is passed', () => {
     let p = recordResult(initialProgress(), 1, 0, { cpm: 80, accuracy: 97, passed: true }, AT);
     p = recordResult(p, 1, 0, { cpm: 90, accuracy: 96, passed: true }, AT);
-    expect(p.stages[2]?.status).toBe('locked');
     p = recordResult(p, 1, 1, { cpm: 70, accuracy: 99, passed: true }, AT);
+    p = recordResult(p, 1, 2, { cpm: 70, accuracy: 98, passed: true }, AT);
+    expect(p.stages[2]?.status).toBe('locked');
+    p = recordResult(p, 1, 3, { cpm: 70, accuracy: 98, passed: true }, AT);
     expect(p.stages[1]).toMatchObject({
       status: 'done',
-      exercisesPassed: [0, 1],
+      exercisesPassed: [0, 1, 2, 3],
       bestCpm: 90,
       bestAccuracy: 99,
     });
