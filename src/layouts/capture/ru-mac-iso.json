@@ -1,0 +1,487 @@
+{
+  "capturedAt": "2026-10-29T16:16:57.921Z",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Claude/4.29.0 Chrome/152.0.7977.167 Safari/537.36",
+  "complete": true,
+  "keys": [
+    {
+      "position": "r0c0",
+      "row": 0,
+      "col": 0,
+      "code": "IntlBackslash",
+      "normal": ">",
+      "shift": "<",
+      "option": "§",
+      "codeMismatch": false
+    },
+    {
+      "position": "r0c1",
+      "row": 0,
+      "col": 1,
+      "code": "Digit1",
+      "normal": "1",
+      "shift": "!",
+      "option": "!",
+      "codeMismatch": false
+    },
+    {
+      "position": "r0c2",
+      "row": 0,
+      "col": 2,
+      "code": "Digit2",
+      "normal": "2",
+      "shift": "\"",
+      "option": "@",
+      "codeMismatch": false
+    },
+    {
+      "position": "r0c3",
+      "row": 0,
+      "col": 3,
+      "code": "Digit3",
+      "normal": "3",
+      "shift": "№",
+      "option": "#",
+      "codeMismatch": false
+    },
+    {
+      "position": "r0c4",
+      "row": 0,
+      "col": 4,
+      "code": "Digit4",
+      "normal": "4",
+      "shift": "%",
+      "option": "$",
+      "codeMismatch": false
+    },
+    {
+      "position": "r0c5",
+      "row": 0,
+      "col": 5,
+      "code": "Digit5",
+      "normal": "5",
+      "shift": ":",
+      "option": "%",
+      "codeMismatch": false
+    },
+    {
+      "position": "r0c6",
+      "row": 0,
+      "col": 6,
+      "code": "Digit6",
+      "normal": "6",
+      "shift": ",",
+      "option": "^",
+      "codeMismatch": false
+    },
+    {
+      "position": "r0c7",
+      "row": 0,
+      "col": 7,
+      "code": "Digit7",
+      "normal": "7",
+      "shift": ".",
+      "option": "&",
+      "codeMismatch": false
+    },
+    {
+      "position": "r0c8",
+      "row": 0,
+      "col": 8,
+      "code": "Digit8",
+      "normal": "8",
+      "shift": ";",
+      "option": "*",
+      "codeMismatch": false
+    },
+    {
+      "position": "r0c9",
+      "row": 0,
+      "col": 9,
+      "code": "Digit9",
+      "normal": "9",
+      "shift": "(",
+      "option": "{",
+      "codeMismatch": false
+    },
+    {
+      "position": "r0c10",
+      "row": 0,
+      "col": 10,
+      "code": "Digit0",
+      "normal": "0",
+      "shift": ")",
+      "option": "}",
+      "codeMismatch": false
+    },
+    {
+      "position": "r0c11",
+      "row": 0,
+      "col": 11,
+      "code": "Minus",
+      "normal": "-",
+      "shift": "_",
+      "option": "–",
+      "codeMismatch": false
+    },
+    {
+      "position": "r0c12",
+      "row": 0,
+      "col": 12,
+      "code": "Equal",
+      "normal": "=",
+      "shift": "+",
+      "option": "»",
+      "codeMismatch": false
+    },
+    {
+      "position": "r1c0",
+      "row": 1,
+      "col": 0,
+      "code": "KeyQ",
+      "normal": "й",
+      "shift": "Й",
+      "option": "ј",
+      "codeMismatch": false
+    },
+    {
+      "position": "r1c1",
+      "row": 1,
+      "col": 1,
+      "code": "KeyW",
+      "normal": "ц",
+      "shift": "Ц",
+      "option": "џ",
+      "codeMismatch": false
+    },
+    {
+      "position": "r1c2",
+      "row": 1,
+      "col": 2,
+      "code": "KeyE",
+      "normal": "у",
+      "shift": "У",
+      "option": "ќ",
+      "codeMismatch": false
+    },
+    {
+      "position": "r1c3",
+      "row": 1,
+      "col": 3,
+      "code": "KeyR",
+      "normal": "к",
+      "shift": "К",
+      "option": "®",
+      "codeMismatch": false
+    },
+    {
+      "position": "r1c4",
+      "row": 1,
+      "col": 4,
+      "code": "KeyT",
+      "normal": "е",
+      "shift": "Е",
+      "option": "†",
+      "codeMismatch": false
+    },
+    {
+      "position": "r1c5",
+      "row": 1,
+      "col": 5,
+      "code": "KeyY",
+      "normal": "н",
+      "shift": "Н",
+      "option": "њ",
+      "codeMismatch": false
+    },
+    {
+      "position": "r1c6",
+      "row": 1,
+      "col": 6,
+      "code": "KeyU",
+      "normal": "г",
+      "shift": "Г",
+      "option": "ѓ",
+      "codeMismatch": false
+    },
+    {
+      "position": "r1c7",
+      "row": 1,
+      "col": 7,
+      "code": "KeyI",
+      "normal": "ш",
+      "shift": "Ш",
+      "option": "ѕ",
+      "codeMismatch": false
+    },
+    {
+      "position": "r1c8",
+      "row": 1,
+      "col": 8,
+      "code": "KeyO",
+      "normal": "щ",
+      "shift": "Щ",
+      "option": "ў",
+      "codeMismatch": false
+    },
+    {
+      "position": "r1c9",
+      "row": 1,
+      "col": 9,
+      "code": "KeyP",
+      "normal": "з",
+      "shift": "З",
+      "option": "‘",
+      "codeMismatch": false
+    },
+    {
+      "position": "r1c10",
+      "row": 1,
+      "col": 10,
+      "code": "BracketLeft",
+      "normal": "х",
+      "shift": "Х",
+      "option": "“",
+      "codeMismatch": false
+    },
+    {
+      "position": "r1c11",
+      "row": 1,
+      "col": 11,
+      "code": "BracketRight",
+      "normal": "ъ",
+      "shift": "Ъ",
+      "option": "ъ",
+      "codeMismatch": false
+    },
+    {
+      "position": "r2c0",
+      "row": 2,
+      "col": 0,
+      "code": "KeyA",
+      "normal": "ф",
+      "shift": "Ф",
+      "option": "ƒ",
+      "codeMismatch": false
+    },
+    {
+      "position": "r2c1",
+      "row": 2,
+      "col": 1,
+      "code": "KeyS",
+      "normal": "ы",
+      "shift": "Ы",
+      "option": "ы",
+      "codeMismatch": false
+    },
+    {
+      "position": "r2c2",
+      "row": 2,
+      "col": 2,
+      "code": "KeyD",
+      "normal": "в",
+      "shift": "В",
+      "option": "ћ",
+      "codeMismatch": false
+    },
+    {
+      "position": "r2c3",
+      "row": 2,
+      "col": 3,
+      "code": "KeyF",
+      "normal": "а",
+      "shift": "А",
+      "option": "÷",
+      "codeMismatch": false
+    },
+    {
+      "position": "r2c4",
+      "row": 2,
+      "col": 4,
+      "code": "KeyG",
+      "normal": "п",
+      "shift": "П",
+      "option": "©",
+      "codeMismatch": false
+    },
+    {
+      "position": "r2c5",
+      "row": 2,
+      "col": 5,
+      "code": "KeyH",
+      "normal": "р",
+      "shift": "Р",
+      "option": "₽",
+      "codeMismatch": false
+    },
+    {
+      "position": "r2c6",
+      "row": 2,
+      "col": 6,
+      "code": "KeyJ",
+      "normal": "о",
+      "shift": "О",
+      "option": "°",
+      "codeMismatch": false
+    },
+    {
+      "position": "r2c7",
+      "row": 2,
+      "col": 7,
+      "code": "KeyK",
+      "normal": "л",
+      "shift": "Л",
+      "option": "љ",
+      "codeMismatch": false
+    },
+    {
+      "position": "r2c8",
+      "row": 2,
+      "col": 8,
+      "code": "KeyL",
+      "normal": "д",
+      "shift": "Д",
+      "option": "∆",
+      "codeMismatch": false
+    },
+    {
+      "position": "r2c9",
+      "row": 2,
+      "col": 9,
+      "code": "Semicolon",
+      "normal": "ж",
+      "shift": "Ж",
+      "option": "…",
+      "codeMismatch": false
+    },
+    {
+      "position": "r2c10",
+      "row": 2,
+      "col": 10,
+      "code": "Quote",
+      "normal": "э",
+      "shift": "Э",
+      "option": "э",
+      "codeMismatch": false
+    },
+    {
+      "position": "r2c11",
+      "row": 2,
+      "col": 11,
+      "code": "Backslash",
+      "normal": "ё",
+      "shift": "Ё",
+      "option": "ё",
+      "codeMismatch": false
+    },
+    {
+      "position": "r3c0",
+      "row": 3,
+      "col": 0,
+      "code": "Backquote",
+      "normal": "]",
+      "shift": "[",
+      "option": "]",
+      "codeMismatch": false
+    },
+    {
+      "position": "r3c1",
+      "row": 3,
+      "col": 1,
+      "code": "KeyZ",
+      "normal": "я",
+      "shift": "Я",
+      "option": "ђ",
+      "codeMismatch": false
+    },
+    {
+      "position": "r3c2",
+      "row": 3,
+      "col": 2,
+      "code": "KeyX",
+      "normal": "ч",
+      "shift": "Ч",
+      "option": "≈",
+      "codeMismatch": false
+    },
+    {
+      "position": "r3c3",
+      "row": 3,
+      "col": 3,
+      "code": "KeyC",
+      "normal": "с",
+      "shift": "С",
+      "option": "≠",
+      "codeMismatch": false
+    },
+    {
+      "position": "r3c4",
+      "row": 3,
+      "col": 4,
+      "code": "KeyV",
+      "normal": "м",
+      "shift": "М",
+      "option": "µ",
+      "codeMismatch": false
+    },
+    {
+      "position": "r3c5",
+      "row": 3,
+      "col": 5,
+      "code": "KeyB",
+      "normal": "и",
+      "shift": "И",
+      "option": "и",
+      "codeMismatch": false
+    },
+    {
+      "position": "r3c6",
+      "row": 3,
+      "col": 6,
+      "code": "KeyN",
+      "normal": "т",
+      "shift": "Т",
+      "option": "™",
+      "codeMismatch": false
+    },
+    {
+      "position": "r3c7",
+      "row": 3,
+      "col": 7,
+      "code": "KeyM",
+      "normal": "ь",
+      "shift": "Ь",
+      "option": "~",
+      "codeMismatch": false
+    },
+    {
+      "position": "r3c8",
+      "row": 3,
+      "col": 8,
+      "code": "Comma",
+      "normal": "б",
+      "shift": "Б",
+      "option": "≤",
+      "codeMismatch": false
+    },
+    {
+      "position": "r3c9",
+      "row": 3,
+      "col": 9,
+      "code": "Period",
+      "normal": "ю",
+      "shift": "Ю",
+      "option": "≥",
+      "codeMismatch": false
+    },
+    {
+      "position": "r3c10",
+      "row": 3,
+      "col": 10,
+      "code": "Slash",
+      "normal": "/",
+      "shift": "?",
+      "option": "“",
+      "codeMismatch": false
+    }
+  ]
+}

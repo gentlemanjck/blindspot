@@ -40,7 +40,12 @@ Key facts that differ from the Windows/PC layout:
 
 - Period is **Shift+7**, comma is **Shift+6** (on PC they share the bottom-right key).
 - Other shifted digits: Shift+1 `!`, Shift+2 `"`, Shift+3 `№`, Shift+4 `%`, Shift+5 `:`, Shift+8 `;`, Shift+9 `(`, Shift+0 `)`.
-- The extra ISO key next to left Shift (`event.code = IntlBackslash`) and the top-left key (`Backquote` on ISO Macs) carry symbols/ё that differ from PC.
+- **ё/Ё is the key left of Enter** (home row, after Э; `event.code = Backslash`), typed with the right pinky.
+- `/` and `?` share the bottom-right key (`Slash`): `/` plain, `?` with Shift.
+- The two ISO-specific keys carry no letters: top-left key `>` / `<`, extra key next to left Shift `]` / `[`. The browser reports their codes swapped: top-left is `IntlBackslash`, the key next to left Shift is `Backquote`.
+- `«` `»` are not on the base or Shift layer (Option+`=` gives `»`).
+
+Confirmed in phase 2 by a capture on the user's Mac (`src/layouts/capture/ru-mac-iso.json`).
 
 **Implementation rule:** store the layout as data, not code — one file `src/layouts/ru-mac-iso.ts` mapping each physical key (`KeyboardEvent.code`) to `{ normal, shift, finger, row }`. The on-screen keyboard is rendered from this map.
 
@@ -50,14 +55,14 @@ Finger zones (standard ЙЦУКЕН touch typing, home row ФЫВА — ОЛДЖ
 
 | Finger | Keys |
 | --- | --- |
-| Left pinky | Й Ф Я, 1, top-left key, IntlBackslash key, left Shift |
+| Left pinky | Й Ф Я, 1, top-left key, ISO key next to left Shift, left Shift |
 | Left ring | Ц Ы Ч, 2 |
 | Left middle | У В С, 3 |
 | Left index | К Е А П М И, 4, 5 |
 | Right index | Н Г Р О Т Ь, 6, 7 |
 | Right middle | Ш Л Б, 8 |
 | Right ring | Щ Д Ю, 9 |
-| Right pinky | З Х Ъ Ж Э, /, 0, -, =, right Shift, Enter |
+| Right pinky | З Х Ъ Ж Э Ё, /, 0, -, =, right Shift, Enter |
 | Thumbs | Space |
 
 Shift rule taught in lessons: capital letters use the Shift on the opposite hand.
@@ -86,7 +91,7 @@ Starting curriculum (store it as data in `src/curriculum/ru.ts` so it is easy to
 | 12 | Ц Щ | Ring fingers, top row |
 | 13 | Ч Ю | Ring fingers, bottom row |
 | 14 | Й З Х Ъ | Pinkies, top row |
-| 15 | Я Ё | Pinkies, bottom row / ISO key |
+| 15 | Я Ё | Left pinky bottom row; right pinky home row, left of Enter |
 | 16 | Shift + capitals | Opposite-hand Shift |
 | 17 | Period, comma (Shift+7, Shift+6) | Sentence punctuation |
 | 18 | ! ? : ; - «» | Remaining punctuation |
@@ -137,7 +142,7 @@ One shared, UI-independent engine (`src/engine/`) runs both modes. It receives k
 
 Input handling:
 
-- Listen to `keydown` on `document`. Compare `event.key` (the produced character) with the expected character; use `event.code` only to highlight the physical key on the on-screen keyboard.
+- Listen to `keydown` on `document`. Compare `event.key` (the produced character) with the expected character. To highlight the pressed key on the on-screen keyboard, look up `event.key` in the layout first and fall back to `event.code` (codes of the two ISO keys differ between browsers).
 - Ignore pure modifier presses (Shift, Cmd, Option, Ctrl, CapsLock) and any key with Cmd/Ctrl held, so browser shortcuts keep working.
 - `preventDefault` on Space and printable keys while a session is active (stops page scrolling).
 - Timer starts on the first keystroke, not on page load. Pause when the tab loses focus; show “click to continue”.
@@ -289,6 +294,6 @@ Acceptance criteria for the MVP:
 
 Open questions:
 
-- Exact positions of ё/Ё and the ISO extra keys — confirmed in phase 2.
+- ~~Exact positions of ё/Ё and the ISO extra keys~~ — confirmed in phase 2, see section 3.
 - Which word frequency list to use, given its licence.
 - Final hosting choice and whether to buy a domain.

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Запись раскладки</title>
+    <style>
+      body {
+        padding: var(--space-4);
+      }
+      h1 {
+        margin-top: 0;
+      }
+      .prompt {
+        font-size: 20px;
+        min-height: 2.5em;
+      }
+      .warn {
+        color: #cf222e;
+        min-height: 1.4em;
+      }
+      .kbd {
+        display: inline-flex;
+        flex-direction: column;
+        gap: 6px;
+        margin: var(--space-3) 0;
+      }
+      .row {
+        display: flex;
+        gap: 6px;
+      }
+      .key {
+        width: 54px;
+        height: 54px;
+        border: 1px solid var(--color-muted);
+        border-radius: 6px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        padding: 3px 4px;
+        box-sizing: border-box;
+        display: grid;
+        grid-template-rows: 1fr 1fr 1fr;
+        position: relative;
+      }
+      .key .hint {
+        position: absolute;
+        right: 4px;
+        bottom: 2px;
+        opacity: 0.35;
+        font-size: 11px;
+      }
+      .key.mod {
+        opacity: 0.35;
+        font-family: var(--font-ui);
+        font-size: 11px;
+        align-content: end;
+      }
+      .key.current {
+        outline: 3px solid #0969da;
+        outline-offset: 1px;
+        background: color-mix(in srgb, #0969da 15%, transparent);
+      }
+      .key.done {
+        background: color-mix(in srgb, #1a7f37 12%, transparent);
+      }
+      .layer-shift {
+        color: #8250df;
+      }
+      .layer-option {
+        color: #bc4c00;
+      }
+      button {
+        font: inherit;
+        margin-right: var(--space-2);
+      }
+      table {
+        border-collapse: collapse;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        margin-top: var(--space-3);
+      }
+      td,
+      th {
+        border: 1px solid var(--color-muted);
+        padding: 2px 8px;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Запись раскладки macOS «Русская» (ISO)</h1>
+    <p>
+      Включите раскладку <b>«Русская»</b>. Нажимайте клавишу, обведённую синим. Три прохода: без
+      модификаторов, с <span class="layer-shift">Shift</span>, с
+      <span class="layer-option">Option</span>.<br />
+      <b>Backspace</b> — отменить последнее нажатие, <b>Enter</b> — пропустить клавишу.
+    </p>
+    <div class="prompt" id="prompt"></div>
+    <div class="warn" id="warn"></div>
+    <div class="kbd" id="kbd"></div>
+    <div>
+      <button id="save" disabled>Сохранить</button>
+      <button id="restart">Начать заново</button>
+      <span id="status"></span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>позиция</th>
+          <th>code</th>
+          <th>key</th>
+          <th>shift</th>
+          <th>alt</th>
+        </tr>
+      </thead>
+      <tbody id="log"></tbody>
+    </table>
+    <script type="module" src="./keys.ts"></script>
+  </body>
+</html>
