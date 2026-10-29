@@ -15,7 +15,7 @@ Goals:
 
 Non-goals for now: user accounts, leaderboards, multiplayer, mobile typing, English layout.
 
-The visual design is a **separate later step**. This spec defines behavior and structure; the first build uses a plain, neutral UI built on CSS variables so the design can be swapped in without touching logic.
+The visual design concept was chosen in phase 5 (see section 7, "Visual design"); phase 9 refines it. All design values stay in CSS variables so the design can change without touching logic.
 
 ## 2. Scope: MVP vs later
 
@@ -181,9 +181,11 @@ All interface text is in Russian. Desktop-first (min width 1024 px); on narrow s
 Typing area behaviour:
 
 - Monospace font, large size; 1–3 lines visible, auto-scrolling by line.
-- Typed text dimmed, current character underlined or boxed by a caret, errors red.
+- Text still to type in pencil grey, typed text in ink, current character boxed, errors in red (a fixed mistake stays underlined in red).
 - On-screen keyboard: keys tinted by finger zone, the next expected key highlighted, the Shift to use highlighted for capitals, the last pressed key flashes (green correct / red wrong).
 - Focus mode: header and nav fade out while typing; they return on mouse move or Esc.
+
+**Visual design: "school notebook".** Light theme is a squared exercise book: blue grid, red margin line, blue-ink typed text, teacher's red pen for errors and marks. Dark theme is a chalkboard: green board, chalk text, yellow chalk for errors. Every size is a multiple of one grid square (`--cell`), and each character of the exercise occupies one square. Fonts (self-hosted via `@fontsource`): PT Mono for exercise text and keys, Golos Text for the interface, Marck Script only for the teacher's remark on the result screen. Finger zones are hatched in coloured-pencil tones.
 
 Use hash-based routing so every route works on static hosting without server rewrites. Keep all colours, fonts and spacing in CSS custom properties (`src/styles/tokens.css`) so the design step only edits tokens and component styles.
 
@@ -276,7 +278,7 @@ Work in phases; finish and verify each phase before starting the next. At the st
 6. **Persistence:** storage, migration, reset.
 7. **Speed test:** options, test screen, results, records, lock until course complete.
 8. **Progress and settings screens.**
-9. **Design step** (separate session, frontend-design skill).
+9. **Design refinement** (frontend-design skill): polish the notebook design chosen in phase 5.
 10. **Deploy:** GitHub Pages workflow, public URL.
 
 Acceptance criteria for the MVP:

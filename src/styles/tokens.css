@@ -1,29 +1,107 @@
-/* Design tokens. The design step (SPEC §7, phase 9) edits only this file and component styles. */
+/* Design tokens: "school notebook" (light) and "chalkboard" (dark). The design lives here and in
+   app.css; logic never depends on these values except --cell, read by the text line layout. */
+
+@import '@fontsource/pt-mono/400.css';
+@import '@fontsource/golos-text/400.css';
+@import '@fontsource/golos-text/500.css';
+@import '@fontsource/golos-text/600.css';
+@import '@fontsource/marck-script/400.css';
+
 :root {
-  --color-bg: #ffffff;
-  --color-text: #1f2328;
-  --color-muted: #6e7781;
+  /* One notebook square. Everything aligns to it: text cells, keys, spacing. */
+  --cell: 30px;
+  /* The red margin line sits after this many squares; content starts one square later. */
+  --margin-cells: 3;
 
-  --font-ui: system-ui, -apple-system, sans-serif;
-  --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+  --paper: #fbfcfa;
+  --grid: #c9d9ea;
+  --margin-line: #e0566b;
+  --ink: #1e3a8a; /* blue ballpoint: typed text, primary actions */
+  --ink-soft: #dfe7f6;
+  --pencil: #8c9096; /* text still to type, locked items */
+  --graphite: #2b2f36; /* interface text */
+  --red-pen: #c8102e; /* errors, teacher marks */
+  --key-face: rgb(251 252 250 / 0.85);
+  --key-edge: #9aa6b4;
 
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 16px;
-  --space-4: 32px;
+  /* Coloured pencils for finger zones. */
+  --f-left-pinky: #b5838d;
+  --f-left-ring: #c49a2c;
+  --f-left-middle: #6a994e;
+  --f-left-index: #4f7cac;
+  --f-right-index: #8e7dbe;
+  --f-right-middle: #2a9d8f;
+  --f-right-ring: #d08c4a;
+  --f-right-pinky: #a05a7a;
+  --f-thumb: #9aa0a6;
+
+  --font-ui: 'Golos Text', system-ui, sans-serif;
+  --font-mono: 'PT Mono', ui-monospace, monospace;
+  --font-hand: 'Marck Script', cursive;
+
+  --text-ui: 17px;
+  --text-small: 14px;
+  --text-title: 26px;
+  --text-cell: 26px;
+
+  color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #0d1117;
-    --color-text: #e6edf3;
-    --color-muted: #8b949e;
+  :root:not([data-theme='light']) {
+    --paper: #1f3a30;
+    --grid: rgb(238 240 232 / 0.06);
+    --margin-line: rgb(238 240 232 / 0.22);
+    --ink: #eef0e8; /* chalk */
+    --ink-soft: rgb(238 240 232 / 0.12);
+    --pencil: rgb(238 240 232 / 0.42);
+    --graphite: #dfe3d8;
+    --red-pen: #f2d16b; /* yellow chalk */
+    --key-face: rgb(31 58 48 / 0.85);
+    --key-edge: rgb(238 240 232 / 0.3);
+
+    --f-left-pinky: #e3a9b4;
+    --f-left-ring: #e6c46a;
+    --f-left-middle: #9fd08a;
+    --f-left-index: #8fb6e6;
+    --f-right-index: #bfb2ea;
+    --f-right-middle: #73cfc3;
+    --f-right-ring: #efb487;
+    --f-right-pinky: #d79ab6;
+    --f-thumb: #b9bfb6;
+
+    color-scheme: dark;
   }
+}
+
+:root[data-theme='dark'] {
+  --paper: #1f3a30;
+  --grid: rgb(238 240 232 / 0.06);
+  --margin-line: rgb(238 240 232 / 0.22);
+  --ink: #eef0e8;
+  --ink-soft: rgb(238 240 232 / 0.12);
+  --pencil: rgb(238 240 232 / 0.42);
+  --graphite: #dfe3d8;
+  --red-pen: #f2d16b;
+  --key-face: rgb(31 58 48 / 0.85);
+  --key-edge: rgb(238 240 232 / 0.3);
+
+  --f-left-pinky: #e3a9b4;
+  --f-left-ring: #e6c46a;
+  --f-left-middle: #9fd08a;
+  --f-left-index: #8fb6e6;
+  --f-right-index: #bfb2ea;
+  --f-right-middle: #73cfc3;
+  --f-right-ring: #efb487;
+  --f-right-pinky: #d79ab6;
+  --f-thumb: #b9bfb6;
+
+  color-scheme: dark;
 }
 
 body {
   margin: 0;
-  background: var(--color-bg);
-  color: var(--color-text);
+  background-color: var(--paper);
+  color: var(--graphite);
   font-family: var(--font-ui);
 }

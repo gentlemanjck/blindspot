@@ -1,0 +1,534 @@
+/* Components on the notebook grid. Every size is a multiple of --cell so text sits in squares. */
+
+:root {
+  --content-left: calc(var(--cell) * (var(--margin-cells) + 1));
+}
+
+body,
+.result {
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: var(--cell) var(--cell);
+}
+
+body {
+  min-height: 100vh;
+  font-size: var(--text-ui);
+  line-height: var(--cell);
+}
+
+/* The red margin line of the notebook. */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--cell) * var(--margin-cells));
+  width: 1.5px;
+  background: var(--margin-line);
+  pointer-events: none;
+  z-index: 20;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* ---------- Shell ---------- */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--cell) * 2);
+  height: calc(var(--cell) * 2);
+  padding-left: var(--content-left);
+  transition: opacity 0.3s;
+}
+
+.brand {
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  gap: var(--cell);
+}
+
+.nav a {
+  text-decoration: none;
+  color: var(--pencil);
+}
+
+.nav a:hover,
+.nav a[aria-current='page'] {
+  color: var(--graphite);
+}
+
+.nav a[aria-current='page'] {
+  text-decoration: underline 2px var(--ink);
+  text-underline-offset: 6px;
+}
+
+.focus-mode .header {
+  opacity: 0;
+}
+
+.main {
+  padding: var(--cell) calc(var(--cell) * 2) calc(var(--cell) * 3) var(--content-left);
+}
+
+.narrow {
+  display: none;
+  padding: calc(var(--cell) * 2) var(--cell) 0 var(--content-left);
+  max-width: 32ch;
+}
+
+@media (max-width: 1023px) {
+  .header,
+  .main {
+    display: none;
+  }
+  .narrow {
+    display: block;
+  }
+}
+
+/* ---------- Text ---------- */
+
+.page {
+  position: relative;
+}
+
+.title {
+  margin: 0 0 var(--cell);
+  font-size: var(--text-title);
+  font-weight: 600;
+  line-height: calc(var(--cell) * 2);
+}
+
+.lead {
+  margin: 0 0 var(--cell);
+  max-width: 62ch;
+}
+
+.actions {
+  display: flex;
+  gap: var(--cell);
+  margin: 0 0 var(--cell);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  height: var(--cell);
+  padding: 0 calc(var(--cell) / 2);
+  border: 1.5px solid var(--ink);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink);
+  font: 500 var(--text-ui) / 1 var(--font-ui);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn:hover {
+  background: var(--ink-soft);
+}
+
+.btn.primary:hover {
+  background: var(--ink);
+  opacity: 0.9;
+}
+
+/* ---------- Course map ---------- */
+
+.stages {
+  list-style: none;
+  margin: 0 0 var(--cell);
+  padding: 0;
+}
+
+.stage {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--cell) / 2);
+  height: var(--cell);
+}
+
+/* Stage numbers sit in the margin, right-aligned against the red line. */
+.stage-num {
+  position: absolute;
+  right: calc(100% + var(--cell) + 8px);
+  color: var(--pencil);
+  font-variant-numeric: tabular-nums;
+}
+
+.stage-link {
+  text-decoration: none;
+}
+
+a.stage-link:hover .stage-title {
+  text-decoration: underline 1.5px var(--ink);
+  text-underline-offset: 5px;
+}
+
+.stage-title.letters {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  letter-spacing: calc(var(--cell) - 0.6em);
+  padding-left: calc((var(--cell) - 0.6em) / 2);
+}
+
+.stage.locked {
+  color: var(--pencil);
+}
+
+.stage.current .stage-title {
+  color: var(--ink);
+  text-decoration: underline 2px var(--ink);
+  text-underline-offset: 5px;
+}
+
+.tick {
+  color: var(--red-pen);
+  font-size: 22px;
+  transform: rotate(-6deg) translateY(2px);
+}
+
+.stage-meta {
+  color: var(--pencil);
+  font-size: var(--text-small);
+  font-variant-numeric: tabular-nums;
+}
+
+.test-entry.locked {
+  color: var(--pencil);
+}
+
+/* ---------- Lesson ---------- */
+
+.margin-mark {
+  position: absolute;
+  top: 0;
+  right: calc(100% + var(--cell) + 8px);
+  font: 32px / calc(var(--cell) * 2) var(--font-hand);
+  color: var(--red-pen);
+  white-space: nowrap;
+}
+
+.lesson-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--cell);
+}
+
+.lesson-sub {
+  margin: 0;
+  color: var(--pencil);
+}
+
+.text-line {
+  margin: var(--cell) 0 0;
+  max-width: calc(var(--cell) * 40);
+}
+
+.text-line .row {
+  display: flex;
+  height: var(--cell);
+  margin-bottom: var(--cell);
+}
+
+.cell {
+  flex: none;
+  width: var(--cell);
+  height: var(--cell);
+  font: var(--text-cell) / var(--cell) var(--font-mono);
+  text-align: center;
+  color: var(--pencil);
+}
+
+.cell.done {
+  color: var(--ink);
+}
+
+.cell.cur {
+  color: var(--graphite);
+  background: var(--ink-soft);
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+
+.cell.space.cur {
+  background-image: linear-gradient(var(--ink), var(--ink));
+  background-size: 50% 2px;
+  background-position: 50% 78%;
+  background-repeat: no-repeat;
+}
+
+/* A position that was missed: underlined in red pen once fixed, red while still wrong. */
+.cell.done.err {
+  background-image: linear-gradient(var(--red-pen), var(--red-pen));
+  background-size: 70% 2px;
+  background-position: 50% 92%;
+  background-repeat: no-repeat;
+}
+
+.cell.cur.err {
+  color: var(--red-pen);
+  box-shadow: inset 0 0 0 2px var(--red-pen);
+}
+
+.live-stats {
+  display: flex;
+  gap: calc(var(--cell) * 2);
+  margin: 0;
+  color: var(--pencil);
+  font-variant-numeric: tabular-nums;
+}
+
+.live-stats b {
+  color: var(--graphite);
+  font-weight: 600;
+}
+
+.lesson-note {
+  height: var(--cell);
+  margin: 0 0 var(--cell);
+  color: var(--pencil);
+  font-size: var(--text-small);
+}
+
+.lesson-note.warn {
+  color: var(--red-pen);
+}
+
+/* ---------- On-screen keyboard ---------- */
+
+.keyboard {
+  display: inline-flex;
+  flex-direction: column;
+  user-select: none;
+}
+
+.kb-row {
+  display: flex;
+}
+
+.key {
+  --finger-color: transparent;
+  position: relative;
+  flex: none;
+  width: calc(var(--w) * var(--cell));
+  height: calc(var(--cell) * 2);
+  font-family: var(--font-mono);
+  color: var(--graphite);
+}
+
+/* Key face inset from the squares; hatched with the finger's coloured pencil. */
+.key::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1.5px solid var(--key-edge);
+  border-radius: 5px;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      color-mix(in srgb, var(--finger-color) 38%, transparent) 0 1.5px,
+      transparent 1.5px 7px
+    ),
+    var(--key-face);
+}
+
+.key[data-finger='leftPinky'] {
+  --finger-color: var(--f-left-pinky);
+}
+.key[data-finger='leftRing'] {
+  --finger-color: var(--f-left-ring);
+}
+.key[data-finger='leftMiddle'] {
+  --finger-color: var(--f-left-middle);
+}
+.key[data-finger='leftIndex'] {
+  --finger-color: var(--f-left-index);
+}
+.key[data-finger='rightIndex'] {
+  --finger-color: var(--f-right-index);
+}
+.key[data-finger='rightMiddle'] {
+  --finger-color: var(--f-right-middle);
+}
+.key[data-finger='rightRing'] {
+  --finger-color: var(--f-right-ring);
+}
+.key[data-finger='rightPinky'] {
+  --finger-color: var(--f-right-pinky);
+}
+.key[data-finger='thumb'] {
+  --finger-color: var(--f-thumb);
+}
+
+.key > span {
+  position: absolute;
+}
+
+.key-main {
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 19px;
+}
+
+.key-shift {
+  top: 6px;
+  left: 9px;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--pencil);
+}
+
+.key:has(.key-shift) .key-main {
+  place-items: end start;
+  padding: 0 0 7px 9px;
+  font-size: 15px;
+}
+
+.key-label {
+  bottom: 7px;
+  left: 9px;
+  font: 12px / 1 var(--font-ui);
+  color: var(--pencil);
+}
+
+.key.deco::before {
+  background: var(--key-face);
+  border-style: dashed;
+}
+
+.key.arrows .key-label {
+  font-size: 9px;
+}
+
+.enter-top::before {
+  bottom: -3px;
+  border-bottom: none;
+  border-radius: 5px 5px 0 0;
+}
+
+.enter-bottom::before {
+  top: -3px;
+  border-top: none;
+  border-radius: 0 0 5px 5px;
+}
+
+/* Tactile bumps on А and О. */
+.home-bump::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  width: 10px;
+  height: 2px;
+  margin-left: -5px;
+  border-radius: 1px;
+  background: var(--key-edge);
+}
+
+.key.next::before {
+  border: 2.5px solid var(--ink);
+  background: var(--ink-soft);
+}
+
+.key.next {
+  color: var(--ink);
+}
+
+.key.hit::before {
+  background: color-mix(in srgb, var(--ink) 30%, var(--key-face));
+}
+
+.key.miss::before {
+  background: color-mix(in srgb, var(--red-pen) 35%, var(--key-face));
+  border-color: var(--red-pen);
+}
+
+/* ---------- Result ---------- */
+
+.result {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  padding: calc(var(--cell) * 4) calc(var(--cell) * 2) 0 var(--content-left);
+  background-color: var(--paper);
+}
+
+.remark {
+  margin: 0 0 var(--cell);
+  font: 44px / calc(var(--cell) * 2) var(--font-hand);
+  color: var(--red-pen);
+  transform: rotate(-2deg);
+  transform-origin: left center;
+}
+
+.figures {
+  display: flex;
+  gap: calc(var(--cell) * 3);
+  margin-bottom: var(--cell);
+}
+
+.figure {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: calc(var(--cell) / 3);
+  align-items: baseline;
+}
+
+.figure-value {
+  font-size: 44px;
+  font-weight: 600;
+  line-height: calc(var(--cell) * 2);
+  font-variant-numeric: tabular-nums;
+}
+
+.figure-unit {
+  color: var(--pencil);
+}
+
+.figure-need {
+  grid-column: 1 / -1;
+  font-size: var(--text-small);
+  color: var(--pencil);
+}
+
+.figure.short .figure-value,
+.figure.short .figure-need {
+  color: var(--red-pen);
+}
+
+.result-keys {
+  margin: 0 0 var(--cell);
+}
+
+.result-hint {
+  margin: 0;
+  color: var(--pencil);
+  font-size: var(--text-small);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header {
+    transition: none;
+  }
+}
