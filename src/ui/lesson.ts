@@ -61,7 +61,10 @@ function mountLesson(
       'header',
       { class: 'lesson-head' },
       h('h1', { class: 'title', text: `Этап ${stageId}` }),
-      h('p', { class: 'lesson-keys', text: stage.title }),
+      h('p', {
+        class: `lesson-keys${stage.kind === 'letters' ? '' : ' named'}`,
+        text: stage.title,
+      }),
       h('p', {
         class: 'lesson-sub',
         text: `Упражнение ${exercise + 1} из ${types.length}: ${EXERCISE_NAMES[type]}`,

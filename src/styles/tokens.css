@@ -16,9 +16,11 @@
   --paper-2: #d6d6d0; /* blocks on paper */
   --ink: #000; /* poster black */
   --on-ink: #e6e6e1;
-  --red: #e1251b;
+  --red: #e1251b; /* fills: blocks, bands, the wedge */
+  --red-text: #c41d14; /* small red text, AA on paper */
   --on-red: #fff;
-  --muted: #7d7d77; /* text still to type, locked items */
+  --muted: #5f5f59; /* small secondary text, AA on paper */
+  --todo: #7d7d77; /* exercise text still to type (large, 3:1 is enough) */
   --rule: #000;
 
   /* Finger zones in four tones per hand; the hatch direction tells the hands apart. */
@@ -47,8 +49,10 @@
     --paper-2: #262623;
     --ink: #ecece6;
     --on-ink: #161614;
-    --red: #ff3b2f;
-    --muted: #77776f;
+    --red: #d42a1f;
+    --red-text: #ff5247;
+    --muted: #909088;
+    --todo: #77776f;
     --rule: #ecece6;
 
     --tone-pinky: #3a3a36;
@@ -66,8 +70,10 @@
   --paper-2: #262623;
   --ink: #ecece6;
   --on-ink: #161614;
-  --red: #ff3b2f;
-  --muted: #77776f;
+  --red: #d42a1f;
+  --red-text: #ff5247;
+  --muted: #909088;
+  --todo: #77776f;
   --rule: #ecece6;
 
   --tone-pinky: #3a3a36;

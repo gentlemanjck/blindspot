@@ -39,9 +39,7 @@ function stageRow(stage: Stage, p: StageProgress): HTMLElement {
     { class: `stage ${p.status}`, attrs: { 'data-stage': String(stage.id) } },
     h('span', { class: 'stage-num', text: String(stage.id) }),
     body,
-    p.status === 'done'
-      ? h('span', { class: 'tick', text: '✓', attrs: { 'aria-label': 'пройден' } })
-      : null,
+    p.status === 'done' ? h('span', { class: 'sr-only', text: 'пройден' }) : null,
     meta ? h('span', { class: 'stage-meta', text: meta }) : null,
   );
 }

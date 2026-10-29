@@ -237,7 +237,7 @@ a {
 }
 
 a.stage-link:hover .stage-title {
-  color: var(--red);
+  color: var(--red-text);
 }
 
 .stage-title {
@@ -252,9 +252,13 @@ a.stage-link:hover .stage-title {
   text-transform: none;
 }
 
-.tick {
-  color: var(--red);
-  font-weight: 600;
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .stage-meta {
@@ -320,6 +324,13 @@ a.stage-link:hover .stage-title {
   transform: rotate(-4deg);
 }
 
+/* Stages that teach capitals, punctuation or digits are named, not listed by key. */
+.lesson-keys.named {
+  font: 700 30px / 1.4 var(--font-display);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .lesson-sub {
   flex-basis: 100%;
   margin: 0;
@@ -343,7 +354,7 @@ a.stage-link:hover .stage-title {
   width: var(--type-cell);
   font: 700 var(--type-size) / 1.3 var(--font-type);
   text-align: center;
-  color: var(--muted);
+  color: var(--todo);
 }
 
 .cell.done {
@@ -351,7 +362,7 @@ a.stage-link:hover .stage-title {
 }
 
 .cell.done.err {
-  color: var(--red);
+  color: var(--red-text);
 }
 
 .cell.cur {
@@ -685,6 +696,60 @@ a.stage-link:hover .stage-title {
   font-size: var(--text-small);
 }
 
+/* Lower screens (e.g. 1024×768): smaller text, keys and gaps so a lesson fits without scrolling. */
+@media (max-height: 880px) {
+  :root {
+    --type-size: 40px;
+    --type-cell: 24px;
+  }
+  .header {
+    height: calc(var(--u) * 7);
+  }
+  .main {
+    padding-top: calc(var(--u) * 3);
+  }
+  .title {
+    font-size: 52px;
+  }
+  .type-zone {
+    margin-top: calc(var(--u) * 2.5);
+  }
+  .wedge {
+    height: 14px;
+    margin-top: var(--u);
+  }
+  .live-stats {
+    margin-top: calc(var(--u) * 2);
+  }
+  .stat b {
+    font-size: 32px;
+  }
+  .stat-disc {
+    width: 64px;
+    height: 64px;
+    font-size: 19px;
+  }
+  .keyboard {
+    --k: 22px;
+  }
+  .key-main {
+    font-size: 16px;
+  }
+  .key:has(.key-shift) .key-main {
+    font-size: 13px;
+  }
+  .test-counter {
+    font-size: 52px;
+  }
+}
+
+/* The giant stage number needs room beside the keyboard. */
+@media (max-width: 1199px) {
+  .stage-ghost {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .header,
   .wedge::after {
@@ -754,7 +819,7 @@ a.stage-link:hover .stage-title {
 .test-counter {
   margin: 0;
   font: 700 64px / 1 var(--font-display);
-  color: var(--red);
+  color: var(--red-text);
   font-variant-numeric: tabular-nums;
 }
 
@@ -846,7 +911,7 @@ a.stage-link:hover .stage-title {
 }
 
 .table tr.weak td {
-  color: var(--red);
+  color: var(--red-text);
   font-weight: 600;
 }
 
@@ -919,7 +984,7 @@ a.stage-link:hover .stage-title {
 }
 
 .form-msg.error {
-  color: var(--red);
+  color: var(--red-text);
 }
 
 .confirm {

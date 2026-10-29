@@ -42,8 +42,18 @@ applyTheme(store.data.settings.theme);
 
 let current: Screen | undefined;
 
+const TITLES: Record<Route['name'], string> = {
+  map: 'Курс',
+  lesson: 'Урок',
+  test: 'Тест скорости',
+  stats: 'Прогресс',
+  settings: 'Настройки',
+};
+
 function render(route: Route): void {
   storageWarning.hidden = store.canSave;
+  const title = route.name === 'lesson' ? `Этап ${route.stage}` : TITLES[route.name];
+  document.title = `${title} — Слепая печать`;
   current?.destroy?.();
   main.replaceChildren();
   nav.replaceChildren(
