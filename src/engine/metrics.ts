@@ -79,3 +79,12 @@ export function computeStats(
     perKey,
   };
 }
+
+/** The n keys with the most misses; ties go to the slower mean time. */
+export function worstKeys(perKey: ReadonlyMap<string, KeyStat>, n: number): string[] {
+  const mean = (s: KeyStat) => (s.timedHits ? s.totalMs / s.timedHits : 0);
+  return [...perKey]
+    .sort((a, b) => b[1].misses - a[1].misses || mean(b[1]) - mean(a[1]))
+    .slice(0, n)
+    .map(([ch]) => ch);
+}

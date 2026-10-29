@@ -2,7 +2,7 @@
 
 import { evaluate, recordResult, shouldShowHint } from '../curriculum/progress.ts';
 import { STAGES, type ExerciseType, type Stage } from '../curriculum/ru.ts';
-import { classifyKey, TypingSession, type Stats } from '../engine/index.ts';
+import { classifyKey, TypingSession, worstKeys, type Stats } from '../engine/index.ts';
 import { navigate, type Route } from '../router.ts';
 import { commit, criteria, store } from '../state.ts';
 import { addSession } from '../storage/index.ts';
@@ -253,11 +253,7 @@ function mountLesson(
   };
 }
 
-/** Up to three keys with the most misses, then the slowest. */
+/** Up to three keys with misses, most missed first. */
 function problemKeys(stats: Stats): string[] {
-  return [...stats.perKey.entries()]
-    .filter(([, s]) => s.misses > 0)
-    .sort((a, b) => b[1].misses - a[1].misses)
-    .slice(0, 3)
-    .map(([ch]) => ch);
+  return worstKeys(stats.perKey, 3).filter((ch) => (stats.perKey.get(ch)?.misses ?? 0) > 0);
 }

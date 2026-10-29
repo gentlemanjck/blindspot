@@ -69,6 +69,14 @@ export class TypingSession {
     return index < this._cursor ? this.typed[index] : undefined;
   }
 
+  /** Whether the character typed at a position matches the text; undefined if not typed yet. */
+  correctAt(index: number): boolean | undefined {
+    const typed = this.typedAt(index);
+    const expected = this._text[index];
+    if (typed === undefined || expected === undefined) return undefined;
+    return charsMatch(expected, typed, this.yoOptional);
+  }
+
   /** Adds text to the end, for timed tests that generate words as they go. */
   append(more: string): void {
     this._text += more;

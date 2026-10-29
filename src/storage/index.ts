@@ -283,3 +283,29 @@ function readRecords(raw: unknown): Record<string, RecordEntry> {
   }
   return out;
 }
+
+// ---------- Speed test records ----------
+
+/** One personal record per combination of options that changes the result. */
+export function configKey(t: TestSettings): string {
+  return [
+    `${t.lengthType}${t.length}`,
+    t.source,
+    t.capitals ? 'caps' : '',
+    t.punctuation ? 'punct' : '',
+    t.yoOptional ? '' : 'yo',
+  ]
+    .filter(Boolean)
+    .join('-');
+}
+
+/** Stores the result if it beats the record for `key` by CPM. */
+export function updateRecord(
+  records: Record<string, RecordEntry>,
+  key: string,
+  result: RecordEntry,
+): { records: Record<string, RecordEntry>; isRecord: boolean } {
+  const prev = records[key];
+  if (prev && prev.cpm >= result.cpm) return { records, isRecord: false };
+  return { records: { ...records, [key]: result }, isRecord: true };
+}

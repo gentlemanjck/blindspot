@@ -75,6 +75,8 @@ describe('TypingSession — flow mode (speed test)', () => {
     ]);
     expect(s.status).toBe('finished');
     expect(s.typedAt(1)).toBe('в');
+    expect(s.correctAt(0)).toBe(true);
+    expect(s.correctAt(1)).toBe(false);
     const st = s.stats();
     expect(st.correctChars).toBe(4);
     expect(st.typedChars).toBe(5);

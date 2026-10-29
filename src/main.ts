@@ -6,6 +6,7 @@ import { courseMapScreen } from './ui/courseMap.ts';
 import { h, type Screen } from './ui/dom.ts';
 import { lessonScreen } from './ui/lesson.ts';
 import { placeholderScreen } from './ui/placeholder.ts';
+import { speedTestScreen } from './ui/speedTest.ts';
 
 const app = document.querySelector<HTMLDivElement>('#app');
 if (!app) throw new Error('#app is missing');
@@ -72,7 +73,7 @@ function screenFor(route: Route): Screen {
     case 'lesson':
       return lessonScreen(route.stage, route.exercise);
     case 'test':
-      return placeholderScreen('Тест скорости', 'Откроется, когда вы пройдёте этапы 1–17 курса.');
+      return speedTestScreen();
     case 'stats':
       return placeholderScreen('Прогресс', 'История занятий появится здесь в следующей версии.');
     case 'settings':

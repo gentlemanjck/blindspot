@@ -699,3 +699,96 @@ a.stage-link:hover .stage-title {
 .storage-warning[hidden] {
   display: none;
 }
+
+/* ---------- Speed test ---------- */
+
+.modebar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--u) * 2);
+  margin-bottom: calc(var(--u) * 4);
+  transition: opacity 0.3s;
+}
+
+.focus-mode .modebar {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.segment {
+  display: flex;
+}
+
+.seg-btn {
+  height: calc(var(--u) * 5);
+  padding: 0 calc(var(--u) * 1.75);
+  border: 2px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  font: 500 15px / 1 var(--font-ui);
+  cursor: pointer;
+}
+
+.seg-btn + .seg-btn {
+  border-left-width: 0;
+}
+
+.seg-btn:hover {
+  background: var(--paper-2);
+}
+
+.seg-btn[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.seg-btn.toggle[aria-pressed='true'] {
+  background: var(--red);
+  border-color: var(--ink);
+  color: var(--on-red);
+}
+
+/* Seconds left (or words done) in big red figures above the text. */
+.test-counter {
+  margin: 0;
+  font: 700 64px / 1 var(--font-display);
+  color: var(--red);
+  font-variant-numeric: tabular-nums;
+}
+
+.speed-test .type-zone {
+  margin-top: var(--u);
+}
+
+.keyboard[hidden] {
+  display: none;
+}
+
+.text-line .row[hidden] {
+  display: none;
+}
+
+.remaining {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--u);
+  list-style: none;
+  margin: 0 0 calc(var(--u) * 4);
+  padding: 0;
+}
+
+.remaining li {
+  display: grid;
+  place-items: center;
+  width: calc(var(--u) * 6);
+  height: calc(var(--u) * 6);
+  border: 2px solid var(--ink);
+  font: 700 22px / 1 var(--font-display);
+}
+
+.result-extra {
+  display: flex;
+  gap: calc(var(--u) * 4);
+  margin: 0 0 var(--u);
+  font-size: 19px;
+}
