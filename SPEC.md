@@ -253,16 +253,15 @@ Conventions: small commits with clear messages; `npm run check` runs typecheck, 
 
 ## 10. Deployment
 
-The hosting provider is not chosen yet. The build must stay a plain static `dist/` folder so it can go to any static host.
+The build stays a plain static `dist/` folder so it can move to any static host.
 
-Default plan, chosen because it doubles as a learning exercise:
+Chosen in phase 10: **Netlify**, connected to a public GitHub repository (`gentlemanjck/blindspot`).
 
-1. Public GitHub repository for the project.
-2. GitHub Pages with source set to **GitHub Actions** (Settings → Pages).
-3. Workflow `.github/workflows/deploy.yml` based on the official Vite static-deploy guide: install, `npm run check`, build, upload `dist`, deploy on every push to `main`.
-4. Set `base` in `vite.config.ts` to the repository path (`/<repo-name>/`), or `/` if a custom domain is used later.
+1. Public GitHub repository; code under MIT, data under its own licences (`LICENSE`, `src/data/README.md`).
+2. Netlify imports the repository; `netlify.toml` sets the build to `npm run check && npm run build`, publish `dist`, Node 24. Every push to `main` deploys; every other branch gets a preview URL. A failing check stops the deploy.
+3. `base` in `vite.config.ts` stays `./` (relative assets), so the same build works at the Netlify address and on a custom domain later.
 
-Alternatives to keep in mind: Netlify or Cloudflare Pages (connect the repo, build command `npm run build`, output `dist`). Before the public launch, check that the chosen host opens reliably for the intended users, and optionally add a custom domain.
+Netlify is a foreign service: availability from Russia may vary by provider. Fallbacks if users cannot open it: GitHub Pages, a Russian static host, or Yandex Object Storage, with a custom domain.
 
 Reference: [Vite — Deploying a Static Site](https://vite.dev/guide/static-deploy).
 
