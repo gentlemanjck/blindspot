@@ -45,31 +45,42 @@ function mountLesson(
   const accEl = h('b');
   const timeEl = h('b');
   const note = h('p', { class: 'lesson-note', attrs: { role: 'status' } });
+  // Red wedge under the text that grows with progress through the exercise.
+  const wedge = h('div', { class: 'wedge', attrs: { 'aria-hidden': 'true' } });
 
   const el = h(
     'section',
     { class: 'page lesson' },
-    h('span', { class: 'margin-mark', text: `${stageId}.${exercise + 1}` }),
+    h('span', {
+      class: 'stage-ghost',
+      text: String(stageId).padStart(2, '0'),
+      attrs: { 'aria-hidden': 'true' },
+    }),
     h(
       'header',
       { class: 'lesson-head' },
-      h('h1', { class: 'title', text: `Этап ${stageId}. ${stage.title}` }),
+      h('h1', { class: 'title', text: `Этап ${stageId}` }),
+      h('p', { class: 'lesson-keys', text: stage.title }),
       h('p', {
         class: 'lesson-sub',
         text: `Упражнение ${exercise + 1} из ${types.length}: ${EXERCISE_NAMES[type]}`,
       }),
     ),
-    textLine.el,
+    h('div', { class: 'type-zone' }, textLine.el, wedge),
     h(
-      'p',
+      'div',
       { class: 'live-stats' },
-      h('span', {}, cpmEl, ' зн/мин'),
-      h('span', {}, accEl, ' %'),
-      h('span', {}, timeEl),
+      h('p', { class: 'stat stat-cpm' }, cpmEl, h('span', { text: 'зн/мин' })),
+      h('p', { class: 'stat stat-acc' }, accEl, h('span', { text: '%' })),
+      h('p', { class: 'stat-disc' }, timeEl),
     ),
     note,
     keyboard?.el,
   );
+
+  function renderProgress(): void {
+    wedge.style.setProperty('--p', String(session.cursor / session.text.length));
+  }
 
   let session = newSession();
   let timer: number | undefined;
@@ -125,6 +136,7 @@ function mountLesson(
     note.className = 'lesson-note';
     keyboard?.flash(e.key, e.code, result === 'correct');
     textLine.update();
+    renderProgress();
     keyboard?.highlight(session.text[session.cursor]);
     setFocusMode(true);
     if (timer === undefined)
@@ -190,6 +202,7 @@ function mountLesson(
     overlay = undefined;
     session = newSession();
     renderStats();
+    renderProgress();
   }
 
   function nextRoute(): Route {
@@ -202,6 +215,7 @@ function mountLesson(
   }
 
   renderStats();
+  renderProgress();
   document.addEventListener('keydown', onKeyDown);
   window.addEventListener('blur', onBlur);
   document.addEventListener('mousemove', onMouseMove);

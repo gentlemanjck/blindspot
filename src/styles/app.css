@@ -1,34 +1,11 @@
-/* Components on the notebook grid. Every size is a multiple of --cell so text sits in squares. */
-
-:root {
-  --content-left: calc(var(--cell) * (var(--margin-cells) + 1));
-}
-
-body,
-.result {
-  background-image:
-    linear-gradient(var(--grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size: var(--cell) var(--cell);
-}
+/* Components in the constructivist poster style: hard edges, solid red and black blocks,
+   condensed capitals for headlines, one diagonal per screen. */
 
 body {
   min-height: 100vh;
   font-size: var(--text-ui);
-  line-height: var(--cell);
-}
-
-/* The red margin line of the notebook. */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: calc(var(--cell) * var(--margin-cells));
-  width: 1.5px;
-  background: var(--margin-line);
-  pointer-events: none;
-  z-index: 20;
+  line-height: 1.5;
+  overflow-x: hidden;
 }
 
 a {
@@ -36,8 +13,8 @@ a {
 }
 
 :focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 2px;
+  outline: 3px solid var(--red);
+  outline-offset: 3px;
 }
 
 /* ---------- Shell ---------- */
@@ -45,35 +22,53 @@ a {
 .header {
   display: flex;
   align-items: center;
-  gap: calc(var(--cell) * 2);
-  height: calc(var(--cell) * 2);
-  padding-left: var(--content-left);
+  gap: calc(var(--u) * 5);
+  height: calc(var(--u) * 9);
+  padding: 0 calc(var(--u) * 8);
+  border-bottom: 3px solid var(--rule);
   transition: opacity 0.3s;
 }
 
 .brand {
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--u);
+  padding: 2px calc(var(--u) * 1.5);
+  background: var(--ink);
+  color: var(--on-ink);
+  font: 700 20px / 1.4 var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   text-decoration: none;
+}
+
+.brand::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  background: var(--red);
 }
 
 .nav {
   display: flex;
-  gap: var(--cell);
+  gap: calc(var(--u) * 3);
 }
 
 .nav a {
+  padding: 4px 0;
+  color: var(--muted);
   text-decoration: none;
-  color: var(--pencil);
+  border-bottom: 4px solid transparent;
 }
 
-.nav a:hover,
-.nav a[aria-current='page'] {
-  color: var(--graphite);
+.nav a:hover {
+  color: var(--ink);
 }
 
 .nav a[aria-current='page'] {
-  text-decoration: underline 2px var(--ink);
-  text-underline-offset: 6px;
+  color: var(--ink);
+  font-weight: 600;
+  border-bottom-color: var(--red);
 }
 
 .focus-mode .header {
@@ -81,12 +76,12 @@ a {
 }
 
 .main {
-  padding: var(--cell) calc(var(--cell) * 2) calc(var(--cell) * 3) var(--content-left);
+  padding: calc(var(--u) * 5) calc(var(--u) * 8) calc(var(--u) * 6);
 }
 
 .narrow {
   display: none;
-  padding: calc(var(--cell) * 2) var(--cell) 0 var(--content-left);
+  padding: calc(var(--u) * 6) calc(var(--u) * 3);
   max-width: 32ch;
 }
 
@@ -100,80 +95,136 @@ a {
   }
 }
 
-/* ---------- Text ---------- */
+/* ---------- Shared ---------- */
 
 .page {
   position: relative;
+  isolation: isolate;
 }
 
 .title {
-  margin: 0 0 var(--cell);
-  font-size: var(--text-title);
-  font-weight: 600;
-  line-height: calc(var(--cell) * 2);
+  margin: 0 0 calc(var(--u) * 3);
+  font: 700 64px / 0.95 var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
 }
 
 .lead {
-  margin: 0 0 var(--cell);
-  max-width: 62ch;
+  margin: 0 0 calc(var(--u) * 4);
+  max-width: 60ch;
 }
 
 .actions {
   display: flex;
-  gap: var(--cell);
-  margin: 0 0 var(--cell);
+  gap: calc(var(--u) * 2);
+  margin: 0 0 calc(var(--u) * 5);
 }
 
 .btn {
   display: inline-flex;
   align-items: center;
-  height: var(--cell);
-  padding: 0 calc(var(--cell) / 2);
-  border: 1.5px solid var(--ink);
-  border-radius: 4px;
+  height: calc(var(--u) * 6);
+  padding: 0 calc(var(--u) * 3);
+  border: 3px solid var(--ink);
+  border-radius: 0;
   background: transparent;
   color: var(--ink);
-  font: 500 var(--text-ui) / 1 var(--font-ui);
+  font: 500 19px / 1 var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   text-decoration: none;
   cursor: pointer;
 }
 
-.btn.primary {
+.btn:hover {
   background: var(--ink);
-  color: var(--paper);
+  color: var(--on-ink);
 }
 
-.btn:hover {
-  background: var(--ink-soft);
+.btn.primary {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--on-red);
 }
 
 .btn.primary:hover {
   background: var(--ink);
-  opacity: 0.9;
+  border-color: var(--ink);
+  color: var(--on-ink);
 }
 
 /* ---------- Course map ---------- */
 
+/* The one diagonal of the screen: a red band behind the headline. */
+.course .title {
+  position: relative;
+  max-width: 9ch;
+}
+
+.course .title::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 4.2ch;
+  top: 46%;
+  width: 100vw;
+  height: 44px;
+  background: var(--red);
+  transform: rotate(-6deg);
+  transform-origin: left center;
+}
+
+/* A black circle on the right that the band crosses. */
+.course::before {
+  content: '';
+  position: absolute;
+  z-index: -2;
+  right: 4%;
+  top: calc(var(--u) * -2);
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
 .stages {
   list-style: none;
-  margin: 0 0 var(--cell);
+  margin: 0 0 calc(var(--u) * 5);
   padding: 0;
+  max-width: 760px;
+  border-top: 3px solid var(--rule);
 }
 
 .stage {
-  position: relative;
   display: flex;
-  align-items: baseline;
-  gap: calc(var(--cell) / 2);
-  height: var(--cell);
+  align-items: center;
+  gap: calc(var(--u) * 2);
+  min-height: calc(var(--u) * 6);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
 }
 
-/* Stage numbers sit in the margin, right-aligned against the red line. */
 .stage-num {
-  position: absolute;
-  right: calc(100% + var(--cell) + 8px);
-  color: var(--pencil);
+  flex: none;
+  width: calc(var(--u) * 7);
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+  font: 700 24px / 1 var(--font-display);
   font-variant-numeric: tabular-nums;
+}
+
+.stage.done .stage-num {
+  background: var(--red);
+  color: var(--on-red);
+}
+
+.stage.current .stage-num {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.stage.locked {
+  color: var(--muted);
 }
 
 .stage-link {
@@ -181,142 +232,217 @@ a {
 }
 
 a.stage-link:hover .stage-title {
-  text-decoration: underline 1.5px var(--ink);
-  text-underline-offset: 5px;
+  color: var(--red);
+}
+
+.stage-title {
+  font: 500 20px / 1 var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .stage-title.letters {
-  font-family: var(--font-mono);
-  font-size: 22px;
-  letter-spacing: calc(var(--cell) - 0.6em);
-  padding-left: calc((var(--cell) - 0.6em) / 2);
-}
-
-.stage.locked {
-  color: var(--pencil);
-}
-
-.stage.current .stage-title {
-  color: var(--ink);
-  text-decoration: underline 2px var(--ink);
-  text-underline-offset: 5px;
+  font: 700 24px / 1 var(--font-type);
+  letter-spacing: 0.25em;
+  text-transform: none;
 }
 
 .tick {
-  color: var(--red-pen);
-  font-size: 22px;
-  transform: rotate(-6deg) translateY(2px);
+  color: var(--red);
+  font-weight: 600;
 }
 
 .stage-meta {
-  color: var(--pencil);
+  margin-left: auto;
+  padding-right: var(--u);
+  color: var(--muted);
   font-size: var(--text-small);
   font-variant-numeric: tabular-nums;
 }
 
+.stage.current .stage-meta {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.test-entry {
+  max-width: 760px;
+  margin: 0;
+  padding: calc(var(--u) * 2) calc(var(--u) * 3);
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
 .test-entry.locked {
-  color: var(--pencil);
+  background: transparent;
+  color: var(--muted);
+  border: 2px dashed var(--muted);
 }
 
 /* ---------- Lesson ---------- */
 
-.margin-mark {
+/* Giant outlined stage number behind the content. */
+.stage-ghost {
   position: absolute;
-  top: 0;
-  right: calc(100% + var(--cell) + 8px);
-  font: 32px / calc(var(--cell) * 2) var(--font-hand);
-  color: var(--red-pen);
-  white-space: nowrap;
+  z-index: -1;
+  right: 0;
+  bottom: calc(var(--u) * -3);
+  font: 700 300px / 0.8 var(--font-display);
+  color: transparent;
+  -webkit-text-stroke: 2px color-mix(in srgb, var(--ink) 22%, transparent);
+  pointer-events: none;
+  user-select: none;
 }
 
 .lesson-head {
   display: flex;
-  align-items: baseline;
-  gap: var(--cell);
+  align-items: center;
+  flex-wrap: wrap;
+  gap: calc(var(--u) * 2) calc(var(--u) * 3);
+}
+
+.lesson-head .title {
+  margin: 0;
+}
+
+.lesson-keys {
+  margin: 0;
+  padding: 0 calc(var(--u) * 1.5);
+  background: var(--red);
+  color: var(--on-red);
+  font: 700 40px / 1.3 var(--font-type);
+  letter-spacing: 0.15em;
+  transform: rotate(-4deg);
 }
 
 .lesson-sub {
+  flex-basis: 100%;
   margin: 0;
-  color: var(--pencil);
+  color: var(--muted);
 }
 
-.text-line {
-  margin: var(--cell) 0 0;
-  max-width: calc(var(--cell) * 40);
+.type-zone {
+  margin: calc(var(--u) * 4) 0 0;
+  padding: var(--u) 0 var(--u) calc(var(--u) * 3);
+  border-left: 14px solid var(--ink);
+  max-width: calc(var(--type-cell) * 40 + var(--u) * 5);
 }
 
 .text-line .row {
   display: flex;
-  height: var(--cell);
-  margin-bottom: var(--cell);
+  height: calc(var(--type-size) * 1.3);
 }
 
 .cell {
   flex: none;
-  width: var(--cell);
-  height: var(--cell);
-  font: var(--text-cell) / var(--cell) var(--font-mono);
+  width: var(--type-cell);
+  font: 700 var(--type-size) / 1.3 var(--font-type);
   text-align: center;
-  color: var(--pencil);
+  color: var(--muted);
 }
 
 .cell.done {
   color: var(--ink);
 }
 
-.cell.cur {
-  color: var(--graphite);
-  background: var(--ink-soft);
-  box-shadow: inset 0 0 0 2px var(--ink);
-}
-
-.cell.space.cur {
-  background-image: linear-gradient(var(--ink), var(--ink));
-  background-size: 50% 2px;
-  background-position: 50% 78%;
-  background-repeat: no-repeat;
-}
-
-/* A position that was missed: underlined in red pen once fixed, red while still wrong. */
 .cell.done.err {
-  background-image: linear-gradient(var(--red-pen), var(--red-pen));
-  background-size: 70% 2px;
-  background-position: 50% 92%;
-  background-repeat: no-repeat;
+  color: var(--red);
 }
 
+.cell.cur {
+  background: var(--red);
+  color: var(--on-red);
+}
+
+/* Still wrong: the block turns black. */
 .cell.cur.err {
-  color: var(--red-pen);
-  box-shadow: inset 0 0 0 2px var(--red-pen);
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+/* Lissitzky's wedge: a red triangle along a black rule, growing with progress. */
+.wedge {
+  height: 18px;
+  margin-top: calc(var(--u) * 2);
+  background: linear-gradient(var(--ink), var(--ink)) center / 100% 2px no-repeat;
+}
+
+.wedge::after {
+  content: '';
+  display: block;
+  height: 100%;
+  width: calc(var(--p, 0) * 100%);
+  background: var(--red);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  transition: width 0.12s linear;
 }
 
 .live-stats {
   display: flex;
-  gap: calc(var(--cell) * 2);
+  align-items: center;
+  margin: calc(var(--u) * 3) 0 0;
+}
+
+.stat {
+  display: flex;
+  align-items: baseline;
+  gap: var(--u);
   margin: 0;
-  color: var(--pencil);
+  padding: var(--u) calc(var(--u) * 2.5);
   font-variant-numeric: tabular-nums;
 }
 
-.live-stats b {
-  color: var(--graphite);
-  font-weight: 600;
+.stat b {
+  min-width: 2.2ch;
+  font: 700 40px / 1 var(--font-display);
+}
+
+.stat span {
+  font-size: var(--text-small);
+}
+
+.stat-cpm {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.stat-acc {
+  background: var(--red);
+  color: var(--on-red);
+}
+
+/* Timer in a ring. */
+.stat-disc {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  margin: 0 0 0 calc(var(--u) * 3);
+  border-radius: 50%;
+  border: 3px solid var(--ink);
+  font: 700 22px / 1 var(--font-display);
+  font-variant-numeric: tabular-nums;
 }
 
 .lesson-note {
-  height: var(--cell);
-  margin: 0 0 var(--cell);
-  color: var(--pencil);
+  min-height: 1.5em;
+  margin: var(--u) 0 calc(var(--u) * 1.5);
+  color: var(--muted);
   font-size: var(--text-small);
 }
 
 .lesson-note.warn {
-  color: var(--red-pen);
+  display: inline-block;
+  padding: 2px var(--u);
+  background: var(--red);
+  color: var(--on-red);
+  font-weight: 600;
 }
 
 /* ---------- On-screen keyboard ---------- */
 
 .keyboard {
+  --k: 26px;
   display: inline-flex;
   flex-direction: column;
   user-select: none;
@@ -327,57 +453,46 @@ a.stage-link:hover .stage-title {
 }
 
 .key {
-  --finger-color: transparent;
+  --tone: transparent;
+  --hatch: 45deg;
   position: relative;
   flex: none;
-  width: calc(var(--w) * var(--cell));
-  height: calc(var(--cell) * 2);
-  font-family: var(--font-mono);
-  color: var(--graphite);
+  width: calc(var(--w) * var(--k));
+  height: calc(var(--k) * 2);
+  font-family: var(--font-type);
+  font-weight: 700;
+  color: var(--ink);
 }
 
-/* Key face inset from the squares; hatched with the finger's coloured pencil. */
+/* Finger tone as a hatch; left and right hands lean opposite ways. */
 .key::before {
   content: '';
   position: absolute;
-  inset: 3px;
-  border: 1.5px solid var(--key-edge);
-  border-radius: 5px;
+  inset: 2px;
+  border: 1.5px solid var(--rule);
   background:
-    repeating-linear-gradient(
-      -45deg,
-      color-mix(in srgb, var(--finger-color) 38%, transparent) 0 1.5px,
-      transparent 1.5px 7px
-    ),
-    var(--key-face);
+    repeating-linear-gradient(var(--hatch), var(--tone) 0 1.5px, transparent 1.5px 6px),
+    var(--paper);
 }
 
-.key[data-finger='leftPinky'] {
-  --finger-color: var(--f-left-pinky);
+.key[data-finger^='right'] {
+  --hatch: -45deg;
 }
-.key[data-finger='leftRing'] {
-  --finger-color: var(--f-left-ring);
+
+.key[data-finger$='Pinky'] {
+  --tone: var(--tone-pinky);
 }
-.key[data-finger='leftMiddle'] {
-  --finger-color: var(--f-left-middle);
+.key[data-finger$='Ring'] {
+  --tone: var(--tone-ring);
 }
-.key[data-finger='leftIndex'] {
-  --finger-color: var(--f-left-index);
+.key[data-finger$='Middle'] {
+  --tone: var(--tone-middle);
 }
-.key[data-finger='rightIndex'] {
-  --finger-color: var(--f-right-index);
-}
-.key[data-finger='rightMiddle'] {
-  --finger-color: var(--f-right-middle);
-}
-.key[data-finger='rightRing'] {
-  --finger-color: var(--f-right-ring);
-}
-.key[data-finger='rightPinky'] {
-  --finger-color: var(--f-right-pinky);
+.key[data-finger$='Index'] {
+  --tone: var(--tone-index);
 }
 .key[data-finger='thumb'] {
-  --finger-color: var(--f-thumb);
+  --tone: var(--tone-thumb);
 }
 
 .key > span {
@@ -393,28 +508,27 @@ a.stage-link:hover .stage-title {
 
 .key-shift {
   top: 6px;
-  left: 9px;
+  left: 8px;
   font-size: 12px;
   line-height: 1;
-  color: var(--pencil);
 }
 
 .key:has(.key-shift) .key-main {
   place-items: end start;
-  padding: 0 0 7px 9px;
+  padding: 0 0 6px 8px;
   font-size: 15px;
 }
 
 .key-label {
   bottom: 7px;
-  left: 9px;
-  font: 12px / 1 var(--font-ui);
-  color: var(--pencil);
+  left: 8px;
+  font: 500 12px / 1 var(--font-ui);
+  color: var(--muted);
 }
 
 .key.deco::before {
-  background: var(--key-face);
-  border-style: dashed;
+  border: 2px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  background: transparent;
 }
 
 .key.arrows .key-label {
@@ -422,46 +536,45 @@ a.stage-link:hover .stage-title {
 }
 
 .enter-top::before {
-  bottom: -3px;
+  bottom: -2px;
   border-bottom: none;
-  border-radius: 5px 5px 0 0;
 }
 
 .enter-bottom::before {
-  top: -3px;
+  top: -2px;
   border-top: none;
-  border-radius: 0 0 5px 5px;
 }
 
-/* Tactile bumps on А and О. */
 .home-bump::after {
   content: '';
   position: absolute;
   left: 50%;
-  bottom: 10px;
-  width: 10px;
-  height: 2px;
-  margin-left: -5px;
-  border-radius: 1px;
-  background: var(--key-edge);
-}
-
-.key.next::before {
-  border: 2.5px solid var(--ink);
-  background: var(--ink-soft);
+  bottom: 9px;
+  width: 12px;
+  height: 3px;
+  margin-left: -6px;
+  background: currentColor;
 }
 
 .key.next {
-  color: var(--ink);
+  color: var(--on-red);
+}
+
+.key.next::before {
+  background: var(--red);
+  border-color: var(--red);
 }
 
 .key.hit::before {
-  background: color-mix(in srgb, var(--ink) 30%, var(--key-face));
+  background: var(--ink);
+}
+
+.key.hit {
+  color: var(--on-ink);
 }
 
 .key.miss::before {
-  background: color-mix(in srgb, var(--red-pen) 35%, var(--key-face));
-  border-color: var(--red-pen);
+  border: 5px solid var(--red);
 }
 
 /* ---------- Result ---------- */
@@ -470,65 +583,106 @@ a.stage-link:hover .stage-title {
   position: fixed;
   inset: 0;
   z-index: 10;
-  padding: calc(var(--cell) * 4) calc(var(--cell) * 2) 0 var(--content-left);
-  background-color: var(--paper);
+  overflow: hidden;
+  isolation: isolate;
+  padding: calc(var(--u) * 14) calc(var(--u) * 8) 0;
+  background: var(--paper);
+}
+
+/* A black diagonal band crossing the sheet behind the remark. */
+.result::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: -10%;
+  top: calc(var(--u) * 12);
+  width: 130%;
+  height: 120px;
+  background: var(--ink);
+  transform: rotate(-6deg);
+  transform-origin: left top;
+}
+
+/* A red circle leaving the sheet at the bottom right, balancing the band. */
+.result::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  right: -90px;
+  bottom: -90px;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: var(--red);
 }
 
 .remark {
-  margin: 0 0 var(--cell);
-  font: 44px / calc(var(--cell) * 2) var(--font-hand);
-  color: var(--red-pen);
-  transform: rotate(-2deg);
+  display: inline-block;
+  margin: 0 0 calc(var(--u) * 9);
+  padding: var(--u) calc(var(--u) * 3);
+  background: var(--red);
+  color: var(--on-red);
+  font: 700 56px / 1 var(--font-display);
+  text-transform: uppercase;
+  transform: rotate(-6deg);
   transform-origin: left center;
 }
 
 .figures {
   display: flex;
-  gap: calc(var(--cell) * 3);
-  margin-bottom: var(--cell);
+  margin-bottom: calc(var(--u) * 4);
 }
 
 .figure {
   display: grid;
   grid-template-columns: auto auto;
-  column-gap: calc(var(--cell) / 3);
+  column-gap: var(--u);
   align-items: baseline;
+  padding: calc(var(--u) * 2) calc(var(--u) * 3);
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.figure + .figure {
+  background: var(--paper-2);
+  color: var(--ink);
+}
+
+.figure.short,
+.figure + .figure.short {
+  background: var(--red);
+  color: var(--on-red);
 }
 
 .figure-value {
-  font-size: 44px;
-  font-weight: 600;
-  line-height: calc(var(--cell) * 2);
+  font: 700 88px / 1 var(--font-display);
   font-variant-numeric: tabular-nums;
 }
 
 .figure-unit {
-  color: var(--pencil);
+  font-size: var(--text-small);
 }
 
 .figure-need {
   grid-column: 1 / -1;
   font-size: var(--text-small);
-  color: var(--pencil);
-}
-
-.figure.short .figure-value,
-.figure.short .figure-need {
-  color: var(--red-pen);
+  opacity: 0.8;
 }
 
 .result-keys {
-  margin: 0 0 var(--cell);
+  margin: 0 0 calc(var(--u) * 4);
+  font-size: 19px;
 }
 
 .result-hint {
   margin: 0;
-  color: var(--pencil);
+  color: var(--muted);
   font-size: var(--text-small);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .header {
+  .header,
+  .wedge::after {
     transition: none;
   }
 }

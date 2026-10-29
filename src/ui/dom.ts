@@ -31,9 +31,9 @@ export interface Screen {
   destroy?: () => void;
 }
 
-/** Reads the notebook square size from the design tokens. */
+/** Reads the width of one exercise character from the design tokens. */
 export function cellPx(): number {
-  const v = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--cell'));
+  const v = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--type-cell'));
   return Number.isFinite(v) && v > 0 ? v : 30;
 }
 

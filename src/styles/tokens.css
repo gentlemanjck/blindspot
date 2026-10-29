@@ -1,100 +1,80 @@
-/* Design tokens: "school notebook" (light) and "chalkboard" (dark). The design lives here and in
-   app.css; logic never depends on these values except --cell, read by the text line layout. */
+/* Design tokens: Russian constructivism — a 1920s poster in red, black and newsprint grey.
+   The design lives here and in app.css; logic reads only --type-cell (text line layout). */
 
-@import '@fontsource/pt-mono/400.css';
+@import '@fontsource/oswald/500.css';
+@import '@fontsource/oswald/700.css';
 @import '@fontsource/golos-text/400.css';
 @import '@fontsource/golos-text/500.css';
 @import '@fontsource/golos-text/600.css';
-@import '@fontsource/marck-script/400.css';
+@import '@fontsource/jetbrains-mono/700.css';
+@import '@fontsource/jetbrains-mono/800.css';
 
 :root {
-  /* One notebook square. Everything aligns to it: text cells, keys, spacing. */
-  --cell: 30px;
-  /* The red margin line sits after this many squares; content starts one square later. */
-  --margin-cells: 3;
+  --u: 8px; /* spacing unit */
 
-  --paper: #fbfcfa;
-  --grid: #c9d9ea;
-  --margin-line: #e0566b;
-  --ink: #1e3a8a; /* blue ballpoint: typed text, primary actions */
-  --ink-soft: #dfe7f6;
-  --pencil: #8c9096; /* text still to type, locked items */
-  --graphite: #2b2f36; /* interface text */
-  --red-pen: #c8102e; /* errors, teacher marks */
-  --key-face: rgb(251 252 250 / 0.85);
-  --key-edge: #9aa6b4;
+  --paper: #e6e6e1; /* newsprint grey */
+  --paper-2: #d6d6d0; /* blocks on paper */
+  --ink: #000; /* poster black */
+  --on-ink: #e6e6e1;
+  --red: #e1251b;
+  --on-red: #fff;
+  --muted: #7d7d77; /* text still to type, locked items */
+  --rule: #000;
 
-  /* Coloured pencils for finger zones. */
-  --f-left-pinky: #b5838d;
-  --f-left-ring: #c49a2c;
-  --f-left-middle: #6a994e;
-  --f-left-index: #4f7cac;
-  --f-right-index: #8e7dbe;
-  --f-right-middle: #2a9d8f;
-  --f-right-ring: #d08c4a;
-  --f-right-pinky: #a05a7a;
-  --f-thumb: #9aa0a6;
+  /* Finger zones in four tones per hand; the hatch direction tells the hands apart. */
+  --tone-pinky: #c4c4bd;
+  --tone-ring: #a9a9a2;
+  --tone-middle: #8e8e87;
+  --tone-index: #6f6f68;
+  --tone-thumb: #cfcfc9;
 
   --font-ui: 'Golos Text', system-ui, sans-serif;
-  --font-mono: 'PT Mono', ui-monospace, monospace;
-  --font-hand: 'Marck Script', cursive;
+  --font-display: 'Oswald', 'Arial Narrow', sans-serif;
+  --font-type: 'JetBrains Mono', ui-monospace, monospace;
 
   --text-ui: 17px;
   --text-small: 14px;
-  --text-title: 26px;
-  --text-cell: 26px;
+  --type-size: 46px;
+  /* Advance width of one character of --font-type at --type-size (0.6em). */
+  --type-cell: 27.6px;
 
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --paper: #1f3a30;
-    --grid: rgb(238 240 232 / 0.06);
-    --margin-line: rgb(238 240 232 / 0.22);
-    --ink: #eef0e8; /* chalk */
-    --ink-soft: rgb(238 240 232 / 0.12);
-    --pencil: rgb(238 240 232 / 0.42);
-    --graphite: #dfe3d8;
-    --red-pen: #f2d16b; /* yellow chalk */
-    --key-face: rgb(31 58 48 / 0.85);
-    --key-edge: rgb(238 240 232 / 0.3);
+    --paper: #161614;
+    --paper-2: #262623;
+    --ink: #ecece6;
+    --on-ink: #161614;
+    --red: #ff3b2f;
+    --muted: #77776f;
+    --rule: #ecece6;
 
-    --f-left-pinky: #e3a9b4;
-    --f-left-ring: #e6c46a;
-    --f-left-middle: #9fd08a;
-    --f-left-index: #8fb6e6;
-    --f-right-index: #bfb2ea;
-    --f-right-middle: #73cfc3;
-    --f-right-ring: #efb487;
-    --f-right-pinky: #d79ab6;
-    --f-thumb: #b9bfb6;
+    --tone-pinky: #3a3a36;
+    --tone-ring: #4a4a45;
+    --tone-middle: #5c5c56;
+    --tone-index: #707069;
+    --tone-thumb: #33332f;
 
     color-scheme: dark;
   }
 }
 
 :root[data-theme='dark'] {
-  --paper: #1f3a30;
-  --grid: rgb(238 240 232 / 0.06);
-  --margin-line: rgb(238 240 232 / 0.22);
-  --ink: #eef0e8;
-  --ink-soft: rgb(238 240 232 / 0.12);
-  --pencil: rgb(238 240 232 / 0.42);
-  --graphite: #dfe3d8;
-  --red-pen: #f2d16b;
-  --key-face: rgb(31 58 48 / 0.85);
-  --key-edge: rgb(238 240 232 / 0.3);
+  --paper: #161614;
+  --paper-2: #262623;
+  --ink: #ecece6;
+  --on-ink: #161614;
+  --red: #ff3b2f;
+  --muted: #77776f;
+  --rule: #ecece6;
 
-  --f-left-pinky: #e3a9b4;
-  --f-left-ring: #e6c46a;
-  --f-left-middle: #9fd08a;
-  --f-left-index: #8fb6e6;
-  --f-right-index: #bfb2ea;
-  --f-right-middle: #73cfc3;
-  --f-right-ring: #efb487;
-  --f-right-pinky: #d79ab6;
-  --f-thumb: #b9bfb6;
+  --tone-pinky: #3a3a36;
+  --tone-ring: #4a4a45;
+  --tone-middle: #5c5c56;
+  --tone-index: #707069;
+  --tone-thumb: #33332f;
 
   color-scheme: dark;
 }
@@ -102,6 +82,6 @@
 body {
   margin: 0;
   background-color: var(--paper);
-  color: var(--graphite);
+  color: var(--ink);
   font-family: var(--font-ui);
 }

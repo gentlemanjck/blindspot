@@ -17,7 +17,7 @@ export interface ResultProps {
 
 function remark(p: ResultProps): string {
   const { evaluation: ev, stats } = p;
-  if (ev.passed) return stats.accuracy === 100 ? 'Отлично, без ошибок!' : 'Молодец!';
+  if (ev.passed) return stats.accuracy === 100 ? 'Без ошибок' : 'Молодец';
   if (p.showHint) return 'Не торопись: сначала точность, скорость придёт';
   if (!ev.accuracyOk) return 'Медленнее, следи за точностью';
   return 'Точно! Теперь чуть быстрее';
