@@ -255,7 +255,7 @@ Conventions: small commits with clear messages; `npm run check` runs typecheck, 
 
 The build stays a plain static `dist/` folder so it can move to any static host.
 
-Chosen in phase 10: **Netlify**, connected to a public GitHub repository (`gentlemanjck/blindspot`).
+Chosen in phase 10: **Netlify**, connected to a public GitHub repository (`gentlemanjck/blindspot`). Live at **https://ablindspot.netlify.app**; `npm run e2e:live` runs the e2e suite against it. Netlify's visitor protection must stay off for production.
 
 1. Public GitHub repository; code under MIT, data under its own licences (`LICENSE`, `src/data/README.md`).
 2. Netlify imports the repository; `netlify.toml` sets the build to `npm run check && npm run build`, publish `dist`, Node 24. Every push to `main` deploys; every other branch gets a preview URL. A failing check stops the deploy.
@@ -282,19 +282,19 @@ Work in phases; finish and verify each phase before starting the next. At the st
 
 Acceptance criteria for the MVP:
 
-- [ ] Every character of the macOS Russian ISO layout typed on the user’s Mac is recognised correctly, including ё, period (Shift+7) and comma (Shift+6).
-- [ ] Lesson text never contains a locked character.
-- [ ] A stage unlocks only after its exercises meet accuracy and CPM targets; progress survives a page reload.
-- [ ] CPM and accuracy match a hand-calculated example in unit tests.
-- [ ] The speed test is locked until the course is complete, and the dev unlock works.
-- [ ] Typing feels instant: no visible lag at 600 CPM.
-- [ ] Latin input shows the “switch layout” banner and is not counted as errors.
-- [ ] App works with localStorage disabled (no crash, warning shown).
-- [ ] Playwright e2e: complete stage 1 by typing, see stage 2 unlock; run a 15 s test and see a result.
-- [ ] Production build deploys and opens at the public URL.
+- [x] Every character of the macOS Russian ISO layout typed on the user’s Mac is recognised correctly, including ё, period (Shift+7) and comma (Shift+6).
+- [x] Lesson text never contains a locked character.
+- [x] A stage unlocks only after its exercises meet accuracy and CPM targets; progress survives a page reload.
+- [x] CPM and accuracy match a hand-calculated example in unit tests.
+- [x] The speed test is locked until the course is complete, and the dev unlock works.
+- [x] Typing feels instant: no visible lag at 600 CPM. (checked by the user on a real keyboard; not measured)
+- [x] Latin input shows the “switch layout” banner and is not counted as errors.
+- [x] App works with localStorage disabled (no crash, warning shown).
+- [x] Playwright e2e: complete stage 1 by typing, see stage 2 unlock; run a 15 s test and see a result.
+- [x] Production build deploys and opens at the public URL. (https://ablindspot.netlify.app, e2e suite passes there)
 
 Open questions:
 
 - ~~Exact positions of ё/Ё and the ISO extra keys~~ — confirmed in phase 2, see section 3.
 - ~~Which word frequency list to use~~ — hermitdave/FrequencyWords (CC BY-SA 4.0), chosen in phase 4; see `src/data/README.md`. Attribution must be shown in the app (Settings).
-- Final hosting choice and whether to buy a domain.
+- ~~Final hosting choice~~ — Netlify (phase 10). A custom domain is still optional.

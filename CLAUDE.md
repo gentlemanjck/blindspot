@@ -10,6 +10,7 @@ Russian touch-typing trainer for the macOS Russian (ISO) layout. Static site, no
 - `npm run check` — typecheck + lint + format check + unit tests; **must pass before every commit**
 - `npm run test` / `npm run test:watch` — Vitest unit tests (`tests/`)
 - `npm run e2e` — Playwright e2e (`e2e/`), builds and serves `dist/` on port 4173
+- `npm run e2e:live` — the same e2e suite against https://ablindspot.netlify.app
 - `npm run build` — production build to `dist/`
 - `npm run format` — Prettier write
 
@@ -21,6 +22,10 @@ Russian touch-typing trainer for the macOS Russian (ISO) layout. Static site, no
 - Layout and curriculum are data (`src/layouts/ru-mac-iso.ts`, `src/curriculum/ru.ts`), not code.
 - Colours, fonts and spacing only via CSS custom properties in `src/styles/tokens.css`.
 - Small commits with clear messages.
+
+## Deployment
+
+Netlify builds every push to `main` of github.com/gentlemanjck/blindspot (`netlify.toml`: `npm run check && npm run build`, publish `dist`). Branches get preview URLs. Git identity for this repo is the GitHub noreply address; pushes go over SSH.
 
 ## Environment notes
 
