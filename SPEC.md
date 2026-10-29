@@ -196,7 +196,7 @@ All data is stored in `localStorage` under one key, `typing-trainer:v1`, as a si
 ```
 {
   schemaVersion: 1,
-  settings: { showKeyboard, theme, passAccuracy, cpmTargets, test: { lengthType, length, source, capitals, punctuation } },
+  settings: { showKeyboard, theme, passAccuracy, cpmTargets, test: { lengthType, length, source, capitals, punctuation, yoOptional } },
   course: { stages: { [stageId]: { status, exercisesPassed[], bestCpm, bestAccuracy } }, completedAt? },
   keyStats: { [char]: { hits, misses, totalMs, timedHits } },  // mean time = totalMs / timedHits (the first keystroke of a session has no timing)
   history: [ { at, mode, stageId?, exerciseType?, cpm, rawCpm, accuracy, durationMs, config? } ],  // keep last 500

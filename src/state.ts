@@ -1,16 +1,39 @@
-// App state shared by screens. In memory for now; phase 6 adds localStorage (SPEC §8).
+// App state shared by screens, loaded from and saved to localStorage (SPEC §8).
 
-import { initialProgress, type CourseProgress } from './curriculum/progress.ts';
-import { DEFAULT_CRITERIA, type PassCriteria } from './curriculum/ru.ts';
+import type { PassCriteria } from './curriculum/ru.ts';
+import { load, save, type AppData, type StorageLike } from './storage/index.ts';
 
-export interface Settings {
-  showKeyboard: boolean;
-  criteria: PassCriteria;
+/** localStorage, or null when the browser blocks it (even reading the property can throw). */
+function browserStorage(): StorageLike | null {
+  try {
+    const s = window.localStorage;
+    const probe = '__typing-trainer-probe';
+    s.setItem(probe, '1');
+    s.removeItem(probe);
+    return s;
+  } catch {
+    return null;
+  }
 }
 
+const storage = browserStorage();
+const loaded = load(storage);
+
 export const store = {
-  progress: initialProgress() as CourseProgress,
-  settings: { showKeyboard: true, criteria: DEFAULT_CRITERIA } as Settings,
+  data: loaded.data,
+  /** False when progress cannot be saved; the app shows a warning. */
+  canSave: loaded.available,
   /** Failures in a row per exercise, `${stage}-${exercise}`; not persisted. */
   failures: new Map<string, number>(),
 };
+
+export function criteria(): PassCriteria {
+  const s = store.data.settings;
+  return { passAccuracy: s.passAccuracy, cpmTargets: s.cpmTargets };
+}
+
+/** Replaces the app data and writes it. Call after a finished exercise or test, not per key. */
+export function commit(next: AppData): void {
+  store.data = next;
+  if (store.canSave) store.canSave = save(storage, next);
+}

@@ -47,7 +47,7 @@ function stageRow(stage: Stage, p: StageProgress): HTMLElement {
 }
 
 export function courseMapScreen(): Screen {
-  const progress = store.progress;
+  const progress = store.data.course;
   const current = STAGES.find((s) => progress.stages[s.id]?.status === 'current');
   const currentProgress = current ? progress.stages[current.id] : undefined;
   const remaining = remainingStages(progress);

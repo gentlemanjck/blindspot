@@ -4,7 +4,8 @@ import { evaluate, recordResult, shouldShowHint } from '../curriculum/progress.t
 import { STAGES, type ExerciseType, type Stage } from '../curriculum/ru.ts';
 import { classifyKey, TypingSession, type Stats } from '../engine/index.ts';
 import { navigate, type Route } from '../router.ts';
-import { store } from '../state.ts';
+import { commit, criteria, store } from '../state.ts';
+import { addSession } from '../storage/index.ts';
 import { exerciseTypes, generate } from '../textgen/index.ts';
 import { h, type Screen } from './dom.ts';
 import { Keyboard } from './keyboard.ts';
@@ -24,7 +25,7 @@ export function lessonScreen(stageId: number, exercise: number): Screen {
   const stage = STAGES.find((s) => s.id === stageId);
   const types = stage ? exerciseTypes(stageId) : [];
   const type = types[exercise];
-  const status = store.progress.stages[stageId]?.status;
+  const status = store.data.course.stages[stageId]?.status;
   if (!stage || !type || status === undefined || status === 'locked') {
     queueMicrotask(() => navigate({ name: 'map' }));
     return { el: h('section') };
@@ -40,7 +41,7 @@ function mountLesson(
 ): Screen {
   const stageId = stage.id;
   const textLine = new TextLine();
-  const keyboard = store.settings.showKeyboard ? new Keyboard() : undefined;
+  const keyboard = store.data.settings.showKeyboard ? new Keyboard() : undefined;
   const cpmEl = h('b');
   const accEl = h('b');
   const timeEl = h('b');
@@ -168,24 +169,42 @@ function mountLesson(
     setFocusMode(false);
     const stats = session.stats();
     renderStats();
-    const ev = evaluate(stats, stage, store.settings.criteria);
+    const ev = evaluate(stats, stage, criteria());
     const key = `${stageId}-${exercise}`;
     const failures = ev.passed ? 0 : (store.failures.get(key) ?? 0) + 1;
     store.failures.set(key, failures);
+
+    const at = new Date().toISOString();
+    const data = addSession(
+      store.data,
+      {
+        at,
+        mode: 'lesson',
+        stageId,
+        exerciseType: type,
+        cpm: stats.cpm,
+        rawCpm: stats.rawCpm,
+        accuracy: stats.accuracy,
+        durationMs: stats.elapsedMs,
+      },
+      stats.perKey,
+    );
     if (ev.passed) {
-      store.progress = recordResult(
-        store.progress,
+      data.course = recordResult(
+        data.course,
         stageId,
         exercise,
         { cpm: stats.cpm, accuracy: stats.accuracy, passed: true },
-        new Date().toISOString(),
+        at,
       );
     }
+    commit(data);
+
     const next = ev.passed ? nextRoute() : undefined;
     const view = resultOverlay({
       stats,
       evaluation: ev,
-      passAccuracy: store.settings.criteria.passAccuracy,
+      passAccuracy: criteria().passAccuracy,
       showHint: shouldShowHint(failures),
       problemKeys: problemKeys(stats),
       onRetry: retry,
@@ -208,7 +227,7 @@ function mountLesson(
   function nextRoute(): Route {
     if (exercise + 1 < types.length)
       return { name: 'lesson', stage: stageId, exercise: exercise + 1 };
-    const nextStage = store.progress.stages[stageId + 1];
+    const nextStage = store.data.course.stages[stageId + 1];
     if (nextStage && nextStage.status !== 'locked')
       return { name: 'lesson', stage: stageId + 1, exercise: 0 };
     return { name: 'map' };

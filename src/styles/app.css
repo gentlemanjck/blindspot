@@ -686,3 +686,16 @@ a.stage-link:hover .stage-title {
     transition: none;
   }
 }
+
+.storage-warning {
+  margin: 0;
+  padding: var(--u) calc(var(--u) * 8);
+  background: var(--red);
+  color: var(--on-red);
+  font-size: var(--text-small);
+  font-weight: 600;
+}
+
+.storage-warning[hidden] {
+  display: none;
+}

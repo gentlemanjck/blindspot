@@ -1,6 +1,7 @@
 import './styles/tokens.css';
 import './styles/app.css';
 import { startRouter, type Route } from './router.ts';
+import { store } from './state.ts';
 import { courseMapScreen } from './ui/courseMap.ts';
 import { h, type Screen } from './ui/dom.ts';
 import { lessonScreen } from './ui/lesson.ts';
@@ -28,11 +29,20 @@ const narrow = h('p', {
   class: 'narrow',
   text: 'Для тренажёра нужна физическая клавиатура и экран шириной от 1024 пикселей.',
 });
-app.append(header, main, narrow);
+const storageWarning = h('p', {
+  class: 'storage-warning',
+  text: 'Прогресс не сохранится: браузер запрещает этому сайту хранить данные.',
+  attrs: { role: 'status' },
+});
+app.append(header, storageWarning, main, narrow);
+
+const theme = store.data.settings.theme;
+if (theme !== 'auto') document.documentElement.dataset['theme'] = theme;
 
 let current: Screen | undefined;
 
 function render(route: Route): void {
+  storageWarning.hidden = store.canSave;
   current?.destroy?.();
   main.replaceChildren();
   nav.replaceChildren(
