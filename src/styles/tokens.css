@@ -1,0 +1,29 @@
+/* Design tokens. The design step (SPEC §7, phase 9) edits only this file and component styles. */
+:root {
+  --color-bg: #ffffff;
+  --color-text: #1f2328;
+  --color-muted: #6e7781;
+
+  --font-ui: system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 32px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0d1117;
+    --color-text: #e6edf3;
+    --color-muted: #8b949e;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-ui);
+}
