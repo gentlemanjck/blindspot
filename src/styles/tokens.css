@@ -7,7 +7,6 @@
 @import '@fontsource/golos-text/500.css';
 @import '@fontsource/golos-text/600.css';
 @import '@fontsource/jetbrains-mono/700.css';
-@import '@fontsource/jetbrains-mono/800.css';
 
 :root {
   --u: 8px; /* spacing unit */
