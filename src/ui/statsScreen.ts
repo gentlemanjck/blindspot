@@ -1,8 +1,12 @@
 // Progress screen: summary, keyboard heatmap, history table and per-key accuracy (SPEC §7).
 
 import { keyByCode } from '../layouts/ru-mac-iso.ts';
+import emptyProgress from '../assets/empty-progress.webp';
+import { COURSE_COMPLETE_STAGE } from '../curriculum/ru.ts';
+import { href } from '../router.ts';
 import { store } from '../state.ts';
 import { historyLabel, keyAccuracy, keyHeat, summary, type KeyHeat } from '../stats/index.ts';
+import { continueRoute } from './courseMap.ts';
 import { charName, h, type Screen } from './dom.ts';
 import { Keyboard } from './keyboard.ts';
 
@@ -25,24 +29,7 @@ export function statsScreen(): Screen {
   const data = store.data;
   const sum = summary(data);
 
-  if (data.history.length === 0) {
-    return {
-      el: h(
-        'section',
-        { class: 'page stats' },
-        h('h1', { class: 'title', text: 'Прогресс' }),
-        h('p', {
-          class: 'lead',
-          text: 'Здесь появятся история занятий и точность по каждой клавише — после первого упражнения.',
-        }),
-        h(
-          'p',
-          { class: 'actions' },
-          h('a', { class: 'btn primary', text: 'Начать с этапа 1', attrs: { href: '#/' } }),
-        ),
-      ),
-    };
-  }
+  if (data.history.length === 0) return emptyStats();
 
   const block = (value: string, label: string, cls = '') =>
     h(
@@ -259,4 +246,61 @@ function heatmapSection(rows: KeyHeat[]): HTMLElement {
       text: `Наведите на клавишу, чтобы увидеть цифры. Пустые клавиши нажаты меньше ${MIN_KEY_PRESSES} раз.`,
     }),
   );
+}
+
+/** Before the first exercise: an illustration and empty figures instead of tables. */
+function emptyStats(): Screen {
+  const next = continueRoute();
+  const cell = (value: string, label: string) =>
+    h(
+      'div',
+      { class: 'empty-cell' },
+      h('span', { class: 'figure-value', text: value }),
+      h('span', { class: 'figure-unit', text: label }),
+    );
+  return {
+    el: h(
+      'section',
+      { class: 'page stats-empty' },
+      h(
+        'div',
+        { class: 'sheet' },
+        h('img', {
+          attrs: {
+            src: emptyProgress,
+            width: '1000',
+            height: '1000',
+            alt: '',
+            'aria-hidden': 'true',
+          },
+        }),
+      ),
+      h(
+        'div',
+        { class: 'stats-empty-text' },
+        h('p', { class: 'eyebrow', text: 'Прогресс' }),
+        h('h1', { class: 'title', text: 'Здесь будет твой путь' }),
+        h('p', {
+          class: 'lead',
+          text: 'История занятий, скорость и точность по каждой клавише появятся после первого упражнения.',
+        }),
+        h(
+          'div',
+          { class: 'empty-cells' },
+          cell('—', 'зн/мин'),
+          cell('—', 'точность'),
+          cell(`1 / ${COURSE_COMPLETE_STAGE}`, 'этап'),
+        ),
+        h(
+          'p',
+          { class: 'actions' },
+          h('a', {
+            class: 'btn primary',
+            text: 'Начать первое упражнение',
+            attrs: { href: next ? href(next) : '#/' },
+          }),
+        ),
+      ),
+    ),
+  };
 }

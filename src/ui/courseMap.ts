@@ -1,8 +1,9 @@
-// Home: the course as a notebook's table of contents (SPEC §7).
+// Home: a poster headline beside Lissitzky's wedge, then the course as a list of stages (SPEC §7).
 
+import lissitzky from '../assets/lissitzky.webp';
 import { remainingStages, type StageProgress } from '../curriculum/progress.ts';
-import { STAGES, type Stage } from '../curriculum/ru.ts';
-import { href } from '../router.ts';
+import { COURSE_COMPLETE_STAGE, STAGES, type Stage } from '../curriculum/ru.ts';
+import { href, type Route } from '../router.ts';
 import { store } from '../state.ts';
 import { exerciseTypes } from '../textgen/index.ts';
 import { h, type Screen } from './dom.ts';
@@ -12,6 +13,21 @@ function startExercise(stage: Stage, p: StageProgress): number {
   const count = exerciseTypes(stage.id).length;
   for (let i = 0; i < count; i++) if (!p.exercisesPassed.includes(i)) return i;
   return 0;
+}
+
+/** The exercise to continue with, or undefined when every stage is done. */
+export function continueRoute(): Route | undefined {
+  const stages = store.data.course.stages;
+  const stage = STAGES.find((s) => stages[s.id]?.status === 'current');
+  const p = stage && stages[stage.id];
+  return stage && p
+    ? { name: 'lesson', stage: stage.id, exercise: startExercise(stage, p) }
+    : undefined;
+}
+
+/** True before the first passed exercise. */
+export function isFreshStart(): boolean {
+  return store.data.course.stages[1]?.exercisesPassed.length === 0;
 }
 
 function stageRow(stage: Stage, p: StageProgress): HTMLElement {
@@ -46,25 +62,15 @@ function stageRow(stage: Stage, p: StageProgress): HTMLElement {
 
 export function courseMapScreen(): Screen {
   const progress = store.data.course;
-  const current = STAGES.find((s) => progress.stages[s.id]?.status === 'current');
-  const currentProgress = current ? progress.stages[current.id] : undefined;
   const remaining = remainingStages(progress);
+  const next = continueRoute();
 
   const cont =
-    current && currentProgress
+    next?.name === 'lesson'
       ? h('a', {
           class: 'btn primary',
-          text:
-            currentProgress.exercisesPassed.length === 0 && current.id === 1
-              ? 'Начать с этапа 1'
-              : `Продолжить этап ${current.id}`,
-          attrs: {
-            href: href({
-              name: 'lesson',
-              stage: current.id,
-              exercise: startExercise(current, currentProgress),
-            }),
-          },
+          text: isFreshStart() ? 'Начать курс' : `Продолжить этап ${next.stage}`,
+          attrs: { href: href(next) },
         })
       : null;
 
@@ -78,19 +84,67 @@ export function courseMapScreen(): Screen {
         )
       : h('p', {
           class: 'test-entry locked',
-          text: `Тест скорости откроется после этапа 17. Осталось этапов: ${remaining.length}.`,
+          text: `Тест скорости откроется после этапа ${COURSE_COMPLETE_STAGE}. Осталось этапов: ${remaining.length}.`,
         });
+
+  const hero = h(
+    'div',
+    { class: 'hero' },
+    h(
+      'div',
+      { class: 'hero-text' },
+      h(
+        'h1',
+        { class: 'hero-title' },
+        h('span', { text: 'Слепая' }),
+        ' ',
+        h('span', { class: 'outline', text: 'печать' }),
+      ),
+      h('p', {
+        class: 'lead',
+        text: `Курс из ${COURSE_COMPLETE_STAGE} этапов: от двух букв в центре клавиатуры до предложений. Потом открывается тест скорости.`,
+      }),
+      h(
+        'p',
+        { class: 'actions' },
+        cont,
+        h('a', { class: 'btn', text: 'Как держать руки', attrs: { href: '#/hands' } }),
+      ),
+      h('p', {
+        class: 'hero-note',
+        text: 'Раскладка: русская для macOS (ISO). Включите её перед началом.',
+      }),
+    ),
+    h(
+      'figure',
+      { class: 'hero-poster' },
+      h(
+        'div',
+        { class: 'sheet' },
+        h('img', {
+          attrs: {
+            src: lissitzky,
+            width: '1600',
+            height: '1352',
+            alt: 'Плакат Эля Лисицкого: красный клин врезается в белый круг на чёрном поле.',
+          },
+        }),
+      ),
+      h(
+        'figcaption',
+        {},
+        h('span', { class: 'hero-slogan', text: 'Клином красным — по белым клавишам' }),
+        h('span', { class: 'hero-credit', text: 'Эль Лисицкий. Клином красным бей белых. 1920' }),
+      ),
+    ),
+  );
 
   return {
     el: h(
       'section',
       { class: 'page course' },
-      h('h1', { class: 'title', text: 'Курс слепой печати' }),
-      h('p', {
-        class: 'lead',
-        text: 'От двух букв под указательными пальцами до цифр. Следующий этап открывается, когда пройдены все упражнения текущего.',
-      }),
-      cont ? h('p', { class: 'actions' }, cont) : null,
+      hero,
+      h('h2', { class: 'subtitle', text: 'Этапы' }),
       h(
         'ol',
         { class: 'stages' },

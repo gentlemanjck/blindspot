@@ -18,7 +18,7 @@ import type { KeyStat } from '../engine/index.ts';
 import { exerciseTypes } from '../textgen/index.ts';
 
 export const STORAGE_KEY = 'typing-trainer:v1';
-export const SCHEMA_VERSION = 2;
+export const SCHEMA_VERSION = 3;
 export const HISTORY_LIMIT = 500;
 
 export type Theme = 'auto' | 'light' | 'dark';
@@ -71,6 +71,8 @@ export interface AppData {
   /** Oldest first, at most HISTORY_LIMIT entries. */
   history: HistoryEntry[];
   records: Record<string, RecordEntry>;
+  /** The "hands on the keyboard" screen was shown before the first exercise (SPEC §7). */
+  handsSeen: boolean;
 }
 
 export interface StorageLike {
@@ -109,6 +111,7 @@ export function defaultData(): AppData {
     keyStats: {},
     history: [],
     records: {},
+    handsSeen: false,
   };
 }
 
@@ -158,9 +161,9 @@ export function addSession(
   return { ...data, keyStats, history: [...data.history, entry].slice(-HISTORY_LIMIT) };
 }
 
-/** Clears course, stats, history and records; keeps settings. */
+/** Clears course, stats, history and records; keeps settings and the hands flag. */
 export function resetProgress(data: AppData): AppData {
-  return { ...defaultData(), settings: data.settings };
+  return { ...defaultData(), settings: data.settings, handsSeen: data.handsSeen };
 }
 
 // ---------- Migration and validation ----------
@@ -171,6 +174,7 @@ export function resetProgress(data: AppData): AppData {
  */
 export function migrate(raw: unknown): AppData {
   if (isObject(raw) && raw['schemaVersion'] === 1) raw = fromV1(raw);
+  if (isObject(raw) && raw['schemaVersion'] === 2) raw = fromV2(raw);
   if (!isObject(raw) || raw['schemaVersion'] !== SCHEMA_VERSION) return defaultData();
   const d = defaultData();
   return {
@@ -180,6 +184,7 @@ export function migrate(raw: unknown): AppData {
     keyStats: readKeyStats(raw['keyStats']),
     history: readHistory(raw['history']),
     records: readRecords(raw['records']),
+    handsSeen: bool(raw['handsSeen'], false),
   };
 }
 
@@ -204,6 +209,12 @@ function fromV1(raw: Obj): Obj {
     };
   }
   return { ...raw, schemaVersion: 2, course: { ...obj(raw['course']), stages: next } };
+}
+
+/** v2 → v3: the hands screen is new; anyone who has already typed does not need it forced. */
+function fromV2(raw: Obj): Obj {
+  const history = raw['history'];
+  return { ...raw, schemaVersion: 3, handsSeen: Array.isArray(history) && history.length > 0 };
 }
 
 const isObject = (v: unknown): v is Obj => typeof v === 'object' && v !== null && !Array.isArray(v);

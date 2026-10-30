@@ -170,12 +170,14 @@ All interface text is in Russian. Desktop-first (min width 1024 px); on narrow s
 
 | Screen | Route | Contents |
 | --- | --- | --- |
-| Home / course map | `#/` | List of stages with status (locked, current, done), best CPM and accuracy per stage, “Continue” button, speed test entry (locked or open). |
+| Home / course map | `#/` | Hero: “Слепая печать” headline (second line outlined) crossed by the red band, “Start course / Continue stage N” and “How to hold your hands” buttons, a layout note; Lissitzky’s poster on the right with the caption “Клином красным — по белым клавишам” and attribution. Below: list of stages with status (locked, current, done), best CPM and accuracy per stage, speed test entry (locked or open). |
+| Hands on the keyboard | `#/hands` | Hands illustration as a framed sheet, legend of home keys in the finger-zone tones (А · О index, В · Л middle, Ы · Д ring, Ф · Ж little, space thumbs), short instruction, three tips (bumps on А and О, eyes on the screen, straight wrists), “Понятно, к упражнению”. Shown automatically once, before exercise 1 of stage 1 (`handsSeen` in storage, §8); always reachable from the home screen. |
+| Course complete | `#/complete` | Full-screen poster shown instead of the lesson result when an exercise first completes stage 17. Black plate over the poster: “Этап 17 из 17”, “Курс пройден”, best stage CPM and mean lesson accuracy of the course, buttons “К тесту скорости” and “К курсу”; a red ribbon under the plate. Redirects home while the course is not complete. |
 | Lesson | `#/lesson/:stage/:exercise` | Text line, live stats, on-screen keyboard, stage progress (“exercise 4 of 8: combinations, again”). |
 | Lesson result | overlay on lesson | CPM, accuracy, pass/fail vs criteria, problem keys, buttons: Retry / Next. |
 | Speed test | `#/test` | Mode bar (time/words, options), text, live stats; keyboard hidden by default. |
 | Test result | overlay on test | Figures from section 5, personal record badge, Restart. |
-| Progress | `#/stats` | Keyboard heatmap, history table (date, mode, CPM, accuracy), per-key accuracy table. |
+| Progress | `#/stats` | Keyboard heatmap, history table (date, mode, CPM, accuracy), per-key accuracy table. Before the first exercise: an illustration, “Здесь будет твой путь”, empty figures (—, —, 1 / 17) and “Начать первое упражнение”. |
 | Settings | `#/settings` | Pass criteria, show/hide keyboard, theme, reset progress (with confirm), data sources and licences (word list attribution, CC BY-SA 4.0). |
 
 Keyboard heatmap (Progress): the lesson keyboard with each physical key filled from grey to red; lower and upper case count as one key, keys pressed fewer than 10 times stay blank. A switch shows either accuracy (100 % = grey, 85 % and lower = full red) or mean time per key (scaled from the user's fastest to slowest key). A tooltip on each key gives accuracy, presses and mean time; a legend explains the scale. The per-key table below keeps the same data for screen readers.
@@ -189,6 +191,17 @@ Typing area behaviour:
 
 **Visual design: Russian constructivism.** A 1920s poster in red (`#E1251B`), black and newsprint grey; the dark theme is the reversed poster (black sheet, light ink, brighter red). Hard edges, no rounded corners, figures on solid red and black blocks, one diagonal per screen. Details: a red band across the course headline crossing a black circle; a giant outlined stage number behind the lesson; a red Lissitzky wedge under the text that grows with progress; the timer in a ring; the result as a poster with the remark on a diagonal band. Exercise text is large (46 px JetBrains Mono Bold): typed in black, upcoming in grey, the current character on a red block (black block while wrong), mistakes stay red. Finger zones on the keyboard are four grey tones per hand, hatched in opposite directions for left and right; the next key is solid red. Fonts (self-hosted via `@fontsource`): Oswald for headlines and figures, Golos Text for the interface, JetBrains Mono for exercise text and keys.
 
+**Shell and buttons.** The header has the logo (black circle cut by a red wedge, `src/assets/logo.svg`, inlined so the circle follows the theme’s ink) and “Слепая печать” in Oswald capitals over a 3 px rule; the active nav item is underlined in red. Buttons have hard corners: the main one is a black block with a red arrow, the secondary one a black outline. On the course-complete poster the main button is red.
+
+**Illustrations.**
+
+- Files live in `src/assets/` and are imported from TS so Vite hashes their names; `public/` holds only files that need a fixed name (`favicon.svg`, `og.jpg`).
+- Flat constructivist style in the poster palette and the finger-zone tones; no text in the images (captions are markup), except the Open Graph image and Lissitzky’s original poster.
+- Compressed before commit: WebP or JPEG, about 200 KB at most.
+- Shown as printed sheets: light paper in a hard frame with a hard offset shadow (black in the light theme, red in the dark one). They keep their light palette in the dark theme; colours for sheets and the poster live in `--sheet-*` and `--poster-*` tokens.
+- Meaningful pictures get an `alt`; decorative ones (empty progress, the course-complete background) get `alt=""` and `aria-hidden`.
+- Open Graph and Twitter tags in `index.html` use absolute URLs (social networks do not resolve relative ones): `og.jpg` is 1200×630 with the title printed in.
+
 Use hash-based routing so every route works on static hosting without server rewrites. Keep all colours, fonts and spacing in CSS custom properties (`src/styles/tokens.css`) so the design step only edits tokens and component styles.
 
 ## 8. Persistence
@@ -197,12 +210,13 @@ All data is stored in `localStorage` under one key, `typing-trainer:v1`, as a si
 
 ```
 {
-  schemaVersion: 2,
+  schemaVersion: 3,
   settings: { showKeyboard, theme, passAccuracy, cpmTargets, test: { lengthType, length, source, capitals, punctuation, yoOptional } },
   course: { stages: { [stageId]: { status, exercisesPassed[], bestCpm, bestAccuracy } }, completedAt? },
   keyStats: { [char]: { hits, misses, totalMs, timedHits } },  // mean time = totalMs / timedHits (the first keystroke of a session has no timing)
   history: [ { at, mode, stageId?, exerciseType?, cpm, rawCpm, accuracy, durationMs, config? } ],  // keep last 500
-  records: { [testConfigKey]: { cpm, accuracy, at } }
+  records: { [testConfigKey]: { cpm, accuracy, at } },
+  handsSeen: boolean  // the hands screen was shown (§7)
 }
 ```
 
@@ -212,7 +226,8 @@ Rules:
 - Write after each finished exercise or test, never on every keystroke.
 - `schemaVersion` plus a `migrate()` function from day one, so later changes do not wipe progress.
 - v1 → v2 (each exercise type doubled): a passed v1 exercise `i` becomes `2i`, the first of its pair; a done stage gets every exercise marked passed.
-- Settings has “Reset progress” with a confirmation dialog.
+- v2 → v3 (hands screen): `handsSeen` is true for anyone with history, so existing users are not sent to it.
+- Settings has “Reset progress” with a confirmation dialog; it keeps settings and `handsSeen`.
 
 ## 9. Tech stack, structure, tooling
 

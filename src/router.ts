@@ -3,6 +3,8 @@
 export type Route =
   | { name: 'map' }
   | { name: 'lesson'; stage: number; exercise: number }
+  | { name: 'hands' }
+  | { name: 'complete' }
   | { name: 'test' }
   | { name: 'stats' }
   | { name: 'settings' };
@@ -19,6 +21,10 @@ export function parseHash(hash: string): Route {
       }
       return { name: 'map' };
     }
+    case 'hands':
+      return { name: 'hands' };
+    case 'complete':
+      return { name: 'complete' };
     case 'test':
       return { name: 'test' };
     case 'stats':
@@ -43,6 +49,11 @@ export function href(route: Route): string {
 
 export function navigate(route: Route): void {
   location.hash = href(route);
+}
+
+/** Navigates without a history entry, so Back does not return to a screen that redirected. */
+export function redirect(route: Route): void {
+  location.replace(href(route));
 }
 
 export function startRouter(onRoute: (route: Route) => void): void {

@@ -29,6 +29,15 @@
   --tone-index: #6f6f68;
   --tone-thumb: #cfcfc9;
 
+  /* Illustrations are printed sheets: they keep the light palette in both themes. */
+  --sheet: #e6e6e1;
+  --sheet-frame: #000;
+  --sheet-shadow: #000;
+  --poster-black: #000;
+  --poster-light: #e6e6e1;
+  --poster-red: #e1251b;
+  --poster-red-text: #ff5247; /* red text on the black plate */
+
   --font-ui: 'Golos Text', system-ui, sans-serif;
   --font-display: 'Oswald', 'Arial Narrow', sans-serif;
   --font-type: 'JetBrains Mono', ui-monospace, monospace;
@@ -60,6 +69,9 @@
     --tone-index: #707069;
     --tone-thumb: #33332f;
 
+    --sheet-frame: #ecece6;
+    --sheet-shadow: #d42a1f;
+
     color-scheme: dark;
   }
 }
@@ -80,6 +92,9 @@
   --tone-middle: #5c5c56;
   --tone-index: #707069;
   --tone-thumb: #33332f;
+
+  --sheet-frame: #ecece6;
+  --sheet-shadow: #d42a1f;
 
   color-scheme: dark;
 }

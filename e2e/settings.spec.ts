@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
-import { typeExercise } from './helpers.ts';
+import { skipHands, typeExercise } from './helpers.ts';
+
+test.beforeEach(({ page }) => skipHands(page));
 
 test('a finished exercise shows up in the progress history', async ({ page }) => {
   await page.goto('./#/stats');

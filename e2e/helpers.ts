@@ -16,3 +16,19 @@ export async function typeExercise(page: Page): Promise<void> {
     }
   });
 }
+
+/**
+ * Marks the "hands on the keyboard" screen as seen, so tests can open exercise 1 of stage 1
+ * directly. Only seeds empty storage, so reloads keep the progress a test has made.
+ */
+export async function skipHands(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    try {
+      const key = 'typing-trainer:v1';
+      if (localStorage.getItem(key) === null)
+        localStorage.setItem(key, JSON.stringify({ schemaVersion: 3, handsSeen: true }));
+    } catch {
+      // Storage blocked: the hands screen shows once per page load instead.
+    }
+  });
+}

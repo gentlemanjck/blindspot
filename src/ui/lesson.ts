@@ -3,7 +3,7 @@
 import { evaluate, recordResult, shouldShowHint } from '../curriculum/progress.ts';
 import { STAGES, type ExerciseType, type Stage } from '../curriculum/ru.ts';
 import { classifyKey, TypingSession, worstKeys, type Stats } from '../engine/index.ts';
-import { navigate, type Route } from '../router.ts';
+import { navigate, redirect, type Route } from '../router.ts';
 import { commit, criteria, store } from '../state.ts';
 import { addSession } from '../storage/index.ts';
 import { exerciseTypes, generate } from '../textgen/index.ts';
@@ -28,6 +28,11 @@ export function lessonScreen(stageId: number, exercise: number): Screen {
   const status = store.data.course.stages[stageId]?.status;
   if (!stage || !type || status === undefined || status === 'locked') {
     queueMicrotask(() => navigate({ name: 'map' }));
+    return { el: h('section') };
+  }
+  // The home position comes first, once, before the very first exercise.
+  if (stageId === 1 && exercise === 0 && !store.data.handsSeen) {
+    queueMicrotask(() => redirect({ name: 'hands' }));
     return { el: h('section') };
   }
   return mountLesson(stage, type, types, exercise);
@@ -201,7 +206,13 @@ function mountLesson(
         at,
       );
     }
+    const courseJustCompleted = !store.data.course.completedAt && !!data.course.completedAt;
     commit(data);
+    // Finishing the course gets the poster instead of the usual result.
+    if (courseJustCompleted) {
+      navigate({ name: 'complete' });
+      return;
+    }
 
     const next = ev.passed ? nextRoute() : undefined;
     const view = resultOverlay({

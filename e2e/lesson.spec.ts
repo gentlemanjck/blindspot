@@ -1,11 +1,13 @@
 import { expect, test } from '@playwright/test';
-import { typeExercise } from './helpers.ts';
+import { skipHands, typeExercise } from './helpers.ts';
+
+test.beforeEach(({ page }) => skipHands(page));
 
 test('completing stage 1 by typing unlocks stage 2', async ({ page }) => {
   await page.goto('./');
   await expect(page.locator('[data-stage="2"]')).toHaveClass(/locked/);
 
-  await page.getByRole('link', { name: 'Начать с этапа 1' }).click();
+  await page.getByRole('link', { name: 'Начать курс' }).click();
   await expect(page).toHaveURL(/#\/lesson\/1\/1$/);
 
   // Stage 1 has keys and combinations, each twice; "Next" after the fourth leads to stage 2.
