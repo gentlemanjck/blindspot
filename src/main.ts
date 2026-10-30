@@ -1,9 +1,12 @@
 import './styles/tokens.css';
 import './styles/app.css';
+import logo from './assets/logo.svg?raw';
 import { startRouter, type Route } from './router.ts';
 import { applyTheme, store } from './state.ts';
+import { courseCompleteScreen } from './ui/courseComplete.ts';
 import { courseMapScreen } from './ui/courseMap.ts';
 import { h, type Screen } from './ui/dom.ts';
+import { handsScreen } from './ui/handsScreen.ts';
 import { lessonScreen } from './ui/lesson.ts';
 import { settingsScreen } from './ui/settingsScreen.ts';
 import { speedTestScreen } from './ui/speedTest.ts';
@@ -20,10 +23,15 @@ const navItems: { route: Route['name']; label: string; hash: string }[] = [
 ];
 
 const nav = h('nav', { class: 'nav', attrs: { 'aria-label': 'Разделы' } });
+// Inline SVG so the circle takes the theme's ink through currentColor.
+const brandMark = h('span', { class: 'brand-mark', attrs: { 'aria-hidden': 'true' } });
+brandMark.innerHTML = logo;
+brandMark.querySelector('svg')?.removeAttribute('role');
+brandMark.querySelector('svg')?.removeAttribute('aria-label');
 const header = h(
   'header',
   { class: 'header' },
-  h('a', { class: 'brand', text: 'Слепая печать', attrs: { href: '#/' } }),
+  h('a', { class: 'brand', attrs: { href: '#/' } }, brandMark, 'Слепая печать'),
   nav,
 );
 const main = h('main', { class: 'main' });
@@ -45,6 +53,8 @@ let current: Screen | undefined;
 const TITLES: Record<Route['name'], string> = {
   map: 'Курс',
   lesson: 'Урок',
+  hands: 'Руки на клавиатуре',
+  complete: 'Курс пройден',
   test: 'Тест скорости',
   stats: 'Прогресс',
   settings: 'Настройки',
@@ -73,7 +83,8 @@ function render(route: Route): void {
 }
 
 function isSection(route: Route, section: Route['name']): boolean {
-  return route.name === section || (section === 'map' && route.name === 'lesson');
+  const inCourse = ['lesson', 'hands', 'complete'].includes(route.name);
+  return route.name === section || (section === 'map' && inCourse);
 }
 
 function screenFor(route: Route): Screen {
@@ -82,6 +93,10 @@ function screenFor(route: Route): Screen {
       return courseMapScreen();
     case 'lesson':
       return lessonScreen(route.stage, route.exercise);
+    case 'hands':
+      return handsScreen();
+    case 'complete':
+      return courseCompleteScreen();
     case 'test':
       return speedTestScreen();
     case 'stats':

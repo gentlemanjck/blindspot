@@ -37,21 +37,20 @@ a {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: var(--u);
-  padding: 2px calc(var(--u) * 1.5);
-  background: var(--ink);
-  color: var(--on-ink);
-  font: 700 20px / 1.4 var(--font-display);
+  gap: calc(var(--u) * 1.25);
+  color: var(--ink);
+  font: 700 22px / 1 var(--font-display);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   text-decoration: none;
 }
 
-.brand::before {
-  content: '';
-  width: 12px;
-  height: 12px;
-  background: var(--red);
+/* The logo: a black circle cut by a red wedge; the circle follows the theme's ink. */
+.brand-mark,
+.brand-mark svg {
+  display: block;
+  width: 36px;
+  height: 36px;
 }
 
 .nav {
@@ -146,50 +145,136 @@ a {
   color: var(--on-ink);
 }
 
+/* The main action: a black block with a red arrow. */
 .btn.primary {
-  background: var(--red);
-  border-color: var(--red);
-  color: var(--on-red);
-}
-
-.btn.primary:hover {
+  gap: calc(var(--u) * 1.5);
   background: var(--ink);
   border-color: var(--ink);
   color: var(--on-ink);
 }
 
+.btn.primary::after {
+  content: '→' / '';
+  color: var(--red);
+  font-size: 1.2em;
+}
+
+.btn.primary:hover {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--on-red);
+}
+
+.btn.primary:hover::after {
+  color: var(--on-red);
+}
+
+/* Illustrations as printed sheets: light paper in a hard frame with a hard offset shadow. */
+.sheet {
+  border: 3px solid var(--sheet-frame);
+  background: var(--sheet);
+  box-shadow: 12px 12px 0 var(--sheet-shadow);
+}
+
+.sheet img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.eyebrow {
+  margin: 0 0 var(--u);
+  color: var(--red-text);
+  font: 500 20px / 1.2 var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
 /* ---------- Course map ---------- */
 
-/* The one diagonal of the screen: a red band behind the headline. */
-.course .title {
+/* Home hero: the headline on the left, Lissitzky's poster on the right. */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 42%);
+  gap: calc(var(--u) * 8);
+  align-items: start;
+  margin-bottom: calc(var(--u) * 7);
+}
+
+.hero-text {
   position: relative;
-  max-width: 9ch;
+  padding-top: calc(var(--u) * 2);
 }
 
-.course .title::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  left: 4.2ch;
-  top: 46%;
-  width: 100vw;
-  height: 44px;
-  background: var(--red);
-  transform: rotate(-6deg);
-  transform-origin: left center;
-}
-
-/* A black circle on the right that the band crosses. */
-.course::before {
+/* A black circle top right that the band runs into. */
+.hero-text::before {
   content: '';
   position: absolute;
   z-index: -2;
-  right: 4%;
-  top: calc(var(--u) * -2);
-  width: 260px;
-  height: 260px;
+  right: calc(var(--u) * 2);
+  top: 0;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   background: var(--ink);
+}
+
+.hero-title {
+  position: relative;
+  margin: 0 0 calc(var(--u) * 4);
+  font: 700 clamp(88px, 9vw, 148px) / 0.88 var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+
+.hero-title span {
+  display: block;
+}
+
+.hero-title .outline {
+  color: transparent;
+  -webkit-text-stroke: 3px var(--ink);
+}
+
+/* The one diagonal of the screen: a red band through the headline into the circle. */
+.hero-title::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 1.6ch;
+  right: calc(var(--u) * -6);
+  top: 50%;
+  height: 40px;
+  background: var(--red);
+  transform: rotate(-7deg);
+  transform-origin: left center;
+}
+
+.hero-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--text-small);
+}
+
+.hero-poster {
+  margin: 0;
+}
+
+.hero-poster figcaption {
+  margin-top: calc(var(--u) * 4);
+}
+
+.hero-slogan {
+  display: block;
+  font: 700 30px / 1.1 var(--font-display);
+  text-transform: uppercase;
+}
+
+.hero-credit {
+  display: block;
+  margin-top: var(--u);
+  color: var(--muted);
+  font-size: var(--text-small);
 }
 
 .stages {
@@ -718,6 +803,234 @@ a.stage-link:hover .stage-title {
   font-size: var(--text-small);
 }
 
+/* ---------- Hands on the keyboard ---------- */
+
+.hands {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+  column-gap: calc(var(--u) * 8);
+  align-items: start;
+}
+
+.hands .title {
+  grid-column: 1 / -1;
+}
+
+.hands-main .sheet {
+  max-width: 780px;
+}
+
+/* Home keys on blocks in the finger-zone tones of the on-screen keyboard. */
+.finger-legend {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  max-width: 786px;
+  margin: calc(var(--u) * 4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.finger-keys {
+  display: block;
+  padding: var(--u) calc(var(--u) * 1.5);
+  border: 2px solid var(--ink);
+  font: 700 24px / 1.2 var(--font-type);
+  white-space: nowrap;
+}
+
+.finger-legend li + li .finger-keys {
+  border-left: none;
+}
+
+.finger-legend [data-tone='index'] .finger-keys {
+  background: var(--tone-index);
+}
+.finger-legend [data-tone='middle'] .finger-keys {
+  background: var(--tone-middle);
+}
+.finger-legend [data-tone='ring'] .finger-keys {
+  background: var(--tone-ring);
+}
+.finger-legend [data-tone='pinky'] .finger-keys {
+  background: var(--tone-pinky);
+}
+.finger-legend [data-tone='thumb'] .finger-keys {
+  background: var(--tone-thumb);
+}
+
+.finger-name {
+  display: block;
+  padding: calc(var(--u) * 0.75) calc(var(--u) * 1.5) 0;
+  font-size: var(--text-small);
+}
+
+.tips {
+  margin: 0 0 calc(var(--u) * 4);
+  padding: 0;
+  list-style: none;
+}
+
+.tips li {
+  position: relative;
+  margin-bottom: calc(var(--u) * 2);
+  padding-left: calc(var(--u) * 4);
+}
+
+/* Red square markers. */
+.tips li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  width: 12px;
+  height: 12px;
+  background: var(--red);
+}
+
+/* ---------- Course complete ---------- */
+
+/* A printed poster over the whole screen; it keeps the light palette in both themes. */
+.complete {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  padding: 0 calc(var(--u) * 8);
+  background: var(--poster-light);
+}
+
+.complete-poster {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right center;
+}
+
+/* A black plate, so the headline reads over the rays; tokens are re-scoped to the plate. */
+.complete-plate {
+  --ink: var(--poster-light);
+  --on-ink: var(--poster-black);
+  --red: var(--poster-red);
+  --red-text: var(--poster-red-text);
+
+  position: relative;
+  max-width: 600px;
+  padding: calc(var(--u) * 5) calc(var(--u) * 6);
+  background: var(--poster-black);
+  color: var(--ink);
+}
+
+/* A red ribbon running out from under the plate on a diagonal. */
+.complete-plate::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: calc(var(--u) * -12);
+  bottom: calc(var(--u) * -9);
+  width: 130%;
+  height: 56px;
+  background: var(--poster-red);
+  /* A paper edge so the ribbon reads over the red rays. */
+  box-shadow: 0 0 0 6px var(--poster-light);
+  transform: rotate(-6deg);
+  transform-origin: left center;
+}
+
+.complete-stage {
+  margin: 0 0 var(--u);
+  color: var(--red-text);
+  font: 500 20px / 1.2 var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.complete-title {
+  margin: 0 0 calc(var(--u) * 2);
+  font: 700 96px / 0.92 var(--font-display);
+  text-transform: uppercase;
+}
+
+.complete-text {
+  margin: 0 0 calc(var(--u) * 4);
+}
+
+.complete-figures {
+  display: flex;
+  gap: calc(var(--u) * 5);
+  margin-bottom: calc(var(--u) * 4);
+}
+
+.complete-figure .figure-value {
+  display: block;
+  font-size: 64px;
+}
+
+.complete .actions {
+  margin: 0;
+}
+
+/* The poster's main action stays red on the black plate. */
+.complete .btn.primary {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--on-red);
+}
+
+.complete .btn.primary::after {
+  color: var(--on-red);
+}
+
+.complete .btn.primary:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--on-ink);
+}
+
+.complete .btn.primary:hover::after {
+  color: var(--red);
+}
+
+/* ---------- Empty progress ---------- */
+
+.stats-empty {
+  display: grid;
+  grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+  gap: calc(var(--u) * 8);
+  align-items: center;
+  max-width: 1200px;
+}
+
+.stats-empty .title {
+  max-width: 12ch;
+  line-height: 1.02;
+}
+
+.empty-cells {
+  display: flex;
+  margin-bottom: calc(var(--u) * 4);
+}
+
+.empty-cell {
+  display: grid;
+  min-width: 120px;
+  padding: calc(var(--u) * 1.5) calc(var(--u) * 3);
+  border: 3px solid var(--ink);
+}
+
+.empty-cell + .empty-cell {
+  border-left: none;
+}
+
+.empty-cell .figure-value {
+  font-size: 48px;
+}
+
 /* Lower screens (e.g. 1024×768): smaller text, keys and gaps so a lesson fits without scrolling. */
 @media (max-height: 880px) {
   :root {
@@ -763,12 +1076,46 @@ a.stage-link:hover .stage-title {
   .test-counter {
     font-size: 52px;
   }
+  .hero-title {
+    font-size: clamp(80px, 8vw, 120px);
+  }
+  .hands-main .sheet {
+    max-width: 600px;
+  }
+  .finger-legend {
+    max-width: 606px;
+    margin-top: calc(var(--u) * 3);
+  }
+  .finger-keys {
+    font-size: 20px;
+  }
+  .complete-title {
+    font-size: 72px;
+  }
+  .complete-figure .figure-value {
+    font-size: 48px;
+  }
+  .stats-empty {
+    grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+  }
 }
 
-/* The giant stage number needs room beside the keyboard. */
+/* The giant stage number needs room beside the keyboard; the hero headline needs room
+   beside the poster, clear of the circle. */
 @media (max-width: 1199px) {
   .stage-ghost {
     display: none;
+  }
+  .hero {
+    grid-template-columns: minmax(0, 1fr) 36%;
+  }
+  .hero-text::before {
+    right: 0;
+    width: 110px;
+    height: 110px;
+  }
+  .hero-slogan {
+    font-size: 24px;
   }
 }
 
