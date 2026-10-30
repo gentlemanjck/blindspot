@@ -1,6 +1,6 @@
 // Figures for the progress and settings screens, computed from stored data (SPEC §7, §8).
 
-import type { PassCriteria } from '../curriculum/ru.ts';
+import { COURSE_COMPLETE_STAGE, type PassCriteria } from '../curriculum/ru.ts';
 import type { KeyStat } from '../engine/index.ts';
 import { locate } from '../layouts/ru-mac-iso.ts';
 import type { AppData, HistoryEntry } from '../storage/index.ts';
@@ -24,6 +24,28 @@ export function summary(data: AppData): Summary {
     bestTestCpm: tests.length ? Math.max(...tests.map((e) => e.cpm)) : null,
     recentAccuracy: recent.length
       ? recent.reduce((sum, e) => sum + e.accuracy, 0) / recent.length
+      : null,
+  };
+}
+
+export interface CourseSummary {
+  /** Best stage CPM over the course stages. */
+  bestCpm: number | null;
+  /** Mean accuracy of course lessons in history. */
+  meanAccuracy: number | null;
+}
+
+/** Figures for the "course complete" poster: stages 1–COURSE_COMPLETE_STAGE only. */
+export function courseSummary(data: AppData): CourseSummary {
+  const inCourse = (id: number | undefined) => id !== undefined && id <= COURSE_COMPLETE_STAGE;
+  const cpms = Object.entries(data.course.stages)
+    .filter(([id, s]) => inCourse(Number(id)) && s.bestCpm > 0)
+    .map(([, s]) => s.bestCpm);
+  const lessons = data.history.filter((e) => e.mode === 'lesson' && inCourse(e.stageId));
+  return {
+    bestCpm: cpms.length ? Math.max(...cpms) : null,
+    meanAccuracy: lessons.length
+      ? lessons.reduce((sum, e) => sum + e.accuracy, 0) / lessons.length
       : null,
   };
 }

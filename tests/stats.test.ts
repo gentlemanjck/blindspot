@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { historyLabel, keyAccuracy, keyHeat, parseCriteria, summary } from '../src/stats/index.ts';
+import {
+  courseSummary,
+  historyLabel,
+  keyAccuracy,
+  keyHeat,
+  parseCriteria,
+  summary,
+} from '../src/stats/index.ts';
 import { defaultData, type HistoryEntry } from '../src/storage/index.ts';
 
 const at = '2026-10-29T12:00:00.000Z';
@@ -21,6 +28,31 @@ const test = (cpm: number, config = 'time30-words'): HistoryEntry => ({
   accuracy: 90,
   durationMs: 30_000,
   config,
+});
+
+describe('courseSummary', () => {
+  it('is empty before the first exercise', () => {
+    expect(courseSummary(defaultData())).toEqual({ bestCpm: null, meanAccuracy: null });
+  });
+
+  it('takes the best stage speed and the mean accuracy of course lessons only', () => {
+    const data = defaultData();
+    data.course.stages[3] = { status: 'done', exercisesPassed: [], bestCpm: 140, bestAccuracy: 98 };
+    data.course.stages[17] = {
+      status: 'done',
+      exercisesPassed: [],
+      bestCpm: 210,
+      bestAccuracy: 96,
+    };
+    data.course.stages[19] = {
+      status: 'done',
+      exercisesPassed: [],
+      bestCpm: 400,
+      bestAccuracy: 99,
+    };
+    data.history = [lesson(90), lesson(100), { ...lesson(10), stageId: 18 }, test(500)];
+    expect(courseSummary(data)).toEqual({ bestCpm: 210, meanAccuracy: 95 });
+  });
 });
 
 describe('summary', () => {

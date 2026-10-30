@@ -141,13 +141,25 @@ describe('migrate', () => {
         },
       },
     });
-    expect(data.schemaVersion).toBe(2);
+    expect(data.schemaVersion).toBe(SCHEMA_VERSION);
     expect(data.course.stages[1]).toMatchObject({ status: 'done', exercisesPassed: [0, 1, 2, 3] });
     expect(data.course.stages[2]).toMatchObject({ status: 'current', exercisesPassed: [0, 2] });
   });
 
+  it('marks the hands screen as seen for v2 users who have already typed', () => {
+    expect(migrate({ schemaVersion: 2, history: [entry] }).handsSeen).toBe(true);
+    expect(migrate({ schemaVersion: 2, history: [] }).handsSeen).toBe(false);
+  });
+
+  it('reads the hands flag and ignores invalid values', () => {
+    expect(migrate({ schemaVersion: SCHEMA_VERSION, handsSeen: true }).handsSeen).toBe(true);
+    expect(migrate({ schemaVersion: SCHEMA_VERSION, handsSeen: 'yes' }).handsSeen).toBe(false);
+  });
+
   it('starts fresh for unknown or future schema versions', () => {
-    expect(migrate({ schemaVersion: 3, settings: { showKeyboard: false } })).toEqual(defaultData());
+    expect(
+      migrate({ schemaVersion: SCHEMA_VERSION + 1, settings: { showKeyboard: false } }),
+    ).toEqual(defaultData());
     expect(migrate('nonsense')).toEqual(defaultData());
   });
 });
@@ -180,11 +192,11 @@ describe('addSession', () => {
 });
 
 describe('resetProgress', () => {
-  it('clears progress but keeps settings', () => {
+  it('clears progress but keeps settings and the hands flag', () => {
     let data = addSession(defaultData(), entry, new Map());
-    data = { ...data, settings: { ...data.settings, showKeyboard: false } };
+    data = { ...data, settings: { ...data.settings, showKeyboard: false }, handsSeen: true };
     data.course = recordResult(data.course, 1, 0, { cpm: 120, accuracy: 96, passed: true }, AT);
     const reset = resetProgress(data);
-    expect(reset).toEqual({ ...defaultData(), settings: data.settings });
+    expect(reset).toEqual({ ...defaultData(), settings: data.settings, handsSeen: true });
   });
 });
